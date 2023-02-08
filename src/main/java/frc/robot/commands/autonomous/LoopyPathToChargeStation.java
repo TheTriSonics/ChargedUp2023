@@ -12,23 +12,23 @@ import frc.robot.commands.SetOdometry;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class LoopyPathToChargeStation extends SequentialCommandGroup {
-  double[][] waypoints = new double[][]{
-    {250.0, 30.0},
-    {150.0, 30.0},
-    {83.79310889625387, 18.953645546150465},
-    {83.09483302485617, -25.39072433454289},
-    {114.51724723775244, -28.96688319588913}
+  double[][] waypoints = new double[][] {
+      { 250.0, 30.0 },
+      { 150.0, 30.0 },
+      { 83.79310889625387, 18.953645546150465 },
+      { 83.09483302485617, -25.39072433454289 },
+      { 114.51724723775244, -28.96688319588913 }
   };
-  double[] headings = new double[]{
-    180, 180, 180, 180
+  double[] headings = new double[] {
+      180, 180, 180, 180
   };
+
   /** Creates a new LoopyPathToChargeStattion. */
   public LoopyPathToChargeStation() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new SetOdometry(250, 30, 180), 
-      new DriveSwerveProfile(waypoints, headings, 0.3)
-    );
+        new SetOdometry(250, 30, 180),
+        new DriveSwerveProfile(waypoints, headings, 0.3));
   }
 }

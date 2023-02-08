@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class DriveSwerveProfile extends CommandBase implements Runnable {
   /** Creates a new DriveSwerveProfile. */
 
-  // input data:  waypoints -> bezier curves
+  // input data: waypoints -> bezier curves
   BezierCurve[] curves;
   double[] headings;
   int numCurves;
@@ -26,15 +26,15 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
   Notifier notifier;
   boolean isNotifierRunning = false;
 
-
-  // length of the trajectory in inches, totalTime to drive it in seconds, and time to decelerate
+  // length of the trajectory in inches, totalTime to drive it in seconds, and
+  // time to decelerate
   double length, totalTime, tDecel;
-  
+
   // some robot data
   double maxSpeed, maxAccel, maxOmega, maxOmegaAccel;
 
   // states of velocity trapezoidal profile
-  
+
   final int ACCEL = 0;
   final int COAST = 1;
   final int DECEL = 2;
@@ -44,22 +44,21 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
   double[] accel = new double[3];
 
   // current data
-  double deltaT = 0.02;         // 20 ms update
+  double deltaT = 0.02; // 20 ms update
   long lastTime;
-  double currentTime = 0;       // current time
-  double currentVelocity = 0;   // current velocity
-  double currentOmega = 0;      // current max angular velocity
-  int currentCurveNumber = 0;   // current index of curve
-  double currentS = 0;          // current parameter of current Bezier curve (0 <= s <= 1)
-  boolean finished = false;     // finished if we've used up all the curves
+  double currentTime = 0; // current time
+  double currentVelocity = 0; // current velocity
+  double currentOmega = 0; // current max angular velocity
+  int currentCurveNumber = 0; // current index of curve
+  double currentS = 0; // current parameter of current Bezier curve (0 <= s <= 1)
+  boolean finished = false; // finished if we've used up all the curves
   DoubleLogEntry targetX, targetY, poseX, poseY, errorX, errorY, targetHeading, poseHeading,
-                 velocityX, velocityY, velocityZ;
+      velocityX, velocityY, velocityZ;
   StringLogEntry messages;
   BooleanLogEntry threadRunningLog;
 
-
-  public DriveSwerveProfile(double[][] waypoints, double[] headings, 
-                          double power) {
+  public DriveSwerveProfile(double[][] waypoints, double[] headings,
+      double power) {
     // set up input data: headings and bezier curves
     this.headings = headings;
     curves = (new Spline(waypoints)).buildTrajectory();
@@ -67,22 +66,23 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
 
     // length of the curve in inches
     length = 0;
-    for (int i = 0; i < numCurves; i++) length += curves[i].length();
+    for (int i = 0; i < numCurves; i++)
+      length += curves[i].length();
 
     // set up some robot data
-    maxSpeed = RobotData.maxSpeed * power;  // maximum speed we're allowed to drive, we want to cap it
-    maxAccel = RobotData.maxAcceleration;   // maximum acceleration, depends on robot
-    maxOmega = RobotData.maxAngularSpeed;   // maximum angular speed, depends on robot
+    maxSpeed = RobotData.maxSpeed * power; // maximum speed we're allowed to drive, we want to cap it
+    maxAccel = RobotData.maxAcceleration; // maximum acceleration, depends on robot
+    maxOmega = RobotData.maxAngularSpeed; // maximum angular speed, depends on robot
     maxOmegaAccel = RobotData.maxAngularAcceleration; // maximum angular acceleration, depends on robot
-    double tAccel = maxSpeed/maxAccel;      // time required to accelerate to maximum speed
-    double distanceAccel = 0.5*maxAccel * tAccel*tAccel; // distance traveled while accelerating to full speed
-    totalTime = (length - 2*distanceAccel)/maxSpeed + 2*tAccel; // total time to drive profile
-    tDecel = totalTime - tAccel;            // time we want to start decelerating
+    double tAccel = maxSpeed / maxAccel; // time required to accelerate to maximum speed
+    double distanceAccel = 0.5 * maxAccel * tAccel * tAccel; // distance traveled while accelerating to full speed
+    totalTime = (length - 2 * distanceAccel) / maxSpeed + 2 * tAccel; // total time to drive profile
+    tDecel = totalTime - tAccel; // time we want to start decelerating
 
     System.out.println("distance: " + length);
     System.out.println("totTime : " + totalTime);
     System.out.println("tDecel  : " + tDecel);
-                            
+
     // changes in velocity in different states
     deltaV[ACCEL] = maxAccel * deltaT;
     deltaV[COAST] = 0;
@@ -130,11 +130,12 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+  }
 
-  public boolean isNotifierFinished(){
+  public boolean isNotifierFinished() {
     return !isNotifierRunning;
-    
+
   }
 
   public void stopNotifier() {
@@ -143,12 +144,14 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
 
   public void run() {
     long time = System.currentTimeMillis();
-    if (time == lastTime) return;
-    deltaT = (time - lastTime)/1000.0;
-    //System.out.println(time + " " + lastTime + " " + deltaT);
+    if (time == lastTime)
+      return;
+    deltaT = (time - lastTime) / 1000.0;
+    // System.out.println(time + " " + lastTime + " " + deltaT);
     lastTime = time;
     // update velocity depending on the state
-    if (currentTime > tDecel) state = DECEL;
+    if (currentTime > tDecel)
+      state = DECEL;
     currentVelocity += accel[state] * deltaT;
     if (currentVelocity > maxSpeed) {
       currentVelocity = maxSpeed;
@@ -164,9 +167,9 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
     }
 
     // Find velocity feedforward term from the profile
-    
+
     Point2d currentTangent = curves[currentCurveNumber].getTangent(currentS);
-    Point2d feedForward = Math2d.smult(currentVelocity/currentTangent.length(), currentTangent);
+    Point2d feedForward = Math2d.smult(currentVelocity / currentTangent.length(), currentTangent);
 
     // Find the error term from where we are and where we should be
 
@@ -175,17 +178,16 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
       currentPosition = Math2d.diff2d(currentPosition, initialOffset);
       initialOffset = Math2d.diff2d(initialOffset, deltaInitialOffset);
     }
-    Pose2d currentPose = RobotContainer.swerveDrive.getOdometry().getPoseMeters(); 
+    Pose2d currentPose = RobotContainer.swerveDrive.getOdometry().getPoseMeters();
 
-   
     Point2d deltaPosition = new Point2d(currentPosition.x - currentPose.getX(), currentPosition.y - currentPose.getY());
     double kP = 0.15;
-    double errorSpeed = kP * deltaPosition.length()/deltaT;
-    if (errorSpeed > 0.5*currentVelocity) errorSpeed = 0.5*currentVelocity;
-    Point2d errorVelocity = Math2d.smult(errorSpeed/deltaPosition.length(), deltaPosition);
+    double errorSpeed = kP * deltaPosition.length() / deltaT;
+    if (errorSpeed > 0.5 * currentVelocity)
+      errorSpeed = 0.5 * currentVelocity;
+    Point2d errorVelocity = Math2d.smult(errorSpeed / deltaPosition.length(), deltaPosition);
     Point2d speedPoint2d = Math2d.sum2d(feedForward, errorVelocity);
-    
-    
+
     velocityX.append(RobotContainer.gyro.getVelocityX());
     velocityY.append(RobotContainer.gyro.getVelocityY());
     velocityZ.append(RobotContainer.gyro.getVelocityZ());
@@ -196,24 +198,23 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
     errorX.append(deltaPosition.x);
     errorY.append(deltaPosition.y);
 
-
     double xSpeed = speedPoint2d.x;
     double ySpeed = speedPoint2d.y;
-    
+
     // Prepare to update new parameter on curve
     double deltaS = currentVelocity * deltaT / currentTangent.length();
     double newS = currentS + deltaS;
-    //System.out.println(currentCurveNumber);
+    // System.out.println(currentCurveNumber);
     if (newS > 1) { // we are going to the next curve
       // this is a little hacky, math could be improved, but probably not a big deal
       newS -= 1;
       currentCurveNumber += 1;
-      if (currentCurveNumber >= numCurves) {  // we've used up the curves so we're done
+      if (currentCurveNumber >= numCurves) { // we've used up the curves so we're done
         System.out.println("FINSIHED: " + currentTime);
         finished = true;
         currentCurveNumber -= 1;
         newS = 1;
-        currentOmega = maxOmega/2.0;
+        currentOmega = maxOmega / 2.0;
         stopNotifier();
         messages.append("profile finished");
         threadRunningLog.append(isNotifierFinished());
@@ -223,23 +224,25 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
 
     messages.append("profile running");
     threadRunningLog.append(isNotifierFinished());
-    
+
     // now deal with the heading of the robot
     double deltaAngle = headings[currentCurveNumber] - currentPose.getRotation().getDegrees();
-    while (deltaAngle < -180) deltaAngle += 360;
-    while (deltaAngle > 180) deltaAngle -= 360;
+    while (deltaAngle < -180)
+      deltaAngle += 360;
+    while (deltaAngle > 180)
+      deltaAngle -= 360;
     currentOmega += maxOmegaAccel * deltaT;
-    if (currentOmega > maxOmega) currentOmega = maxOmega;
-    double rotSpeed = deltaAngle/180 * currentOmega;
+    if (currentOmega > maxOmega)
+      currentOmega = maxOmega;
+    double rotSpeed = deltaAngle / 180 * currentOmega;
 
     targetHeading.append(headings[currentCurveNumber]);
     poseHeading.append(currentPose.getRotation().getDegrees());
-    
 
     // finally, tell the drive train what to do
-    //RobotContainer.swerveDrive.drive(xSpeed, ySpeed, rotSpeed);
-    //System.out.println(xSpeed + " " + ySpeed);  
-    RobotContainer.swerveDrive.drive(xSpeed, ySpeed, rotSpeed);  
+    // RobotContainer.swerveDrive.drive(xSpeed, ySpeed, rotSpeed);
+    // System.out.println(xSpeed + " " + ySpeed);
+    RobotContainer.swerveDrive.drive(xSpeed, ySpeed, rotSpeed);
 
     // update current parameter on current curve and current time
     currentS = newS;

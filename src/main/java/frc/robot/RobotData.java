@@ -7,7 +7,7 @@ package frc.robot;
 /** Add your docs here. */
 public class RobotData {
     public static final double maxSpeed = 15.6 * 12;
-    public static final double maxAngularSpeed = 2*Math.PI;
-    public static final double maxAcceleration = maxSpeed/2;
-    public static final double maxAngularAcceleration = 2*Math.PI;
+    public static final double maxAngularSpeed = 2 * Math.PI;
+    public static final double maxAcceleration = maxSpeed / 2;
+    public static final double maxAngularAcceleration = 2 * Math.PI;
 }
