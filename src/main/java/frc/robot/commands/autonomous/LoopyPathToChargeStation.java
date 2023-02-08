@@ -28,7 +28,8 @@ public class LoopyPathToChargeStation extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new SetOdometry(250, 30, 180), 
-      new DriveSwerveProfile(waypoints, headings, 0.3)
+      new DriveSwerveProfile(waypoints, headings, 0.3),
+      new DriveOnRampFromNearSide()
     );
   }
 }

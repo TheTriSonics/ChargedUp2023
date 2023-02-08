@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
@@ -28,6 +29,12 @@ public class PoseEstimate extends SubsystemBase {
 
   public Pose2d getPose() {
       return poseEstimator.getEstimatedPosition();
+  }
+
+  public void setPose(double x, double y, double heading) {
+    Pose2d pose = new Pose2d(x, y, Rotation2d.fromDegrees(heading));
+    RobotContainer.gyro.setInitialHeading(heading);
+    poseEstimator.resetPosition(RobotContainer.gyro.getRotation2d(), RobotContainer.swerveDrive.getModulePositions(), pose);
   }
 
   boolean aprilTagSeen = false; 
