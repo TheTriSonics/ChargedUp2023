@@ -6,19 +6,18 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDriveTrain;
-import frc.robot.subsystems.SwerveModule;
 
 public class SwerveDriveCommand extends CommandBase {
   private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(1.5);
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(1.5);
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
-  XboxController controller;
+  CommandXboxController controller;
   /** Creates a new SwerveDriveCommand. */
-  public SwerveDriveCommand(XboxController controller) {
+  public SwerveDriveCommand(CommandXboxController controller) {
     this.controller = controller;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.swerveDrive);

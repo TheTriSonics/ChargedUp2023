@@ -16,21 +16,18 @@ public class PoseEstimate extends SubsystemBase {
 
   /** Creates a new PoseEstimate. */
   public PoseEstimate() {
-
-
-
     poseEstimator = new SwerveDrivePoseEstimator(
-      RobotContainer.swerveDrive.getKinematics(),
-      RobotContainer.gyro.getRotation2d(), 
-      RobotContainer.swerveDrive.getModulePositions(), 
-      new Pose2d());
+        RobotContainer.swerveDrive.getKinematics(),
+        RobotContainer.gyro.getRotation2d(),
+        RobotContainer.swerveDrive.getModulePositions(),
+        new Pose2d());
   }
 
   public Pose2d getPose() {
-      return poseEstimator.getEstimatedPosition();
+    return poseEstimator.getEstimatedPosition();
   }
 
-  boolean aprilTagSeen = false; 
+  boolean aprilTagSeen = false;
 
   @Override
   public void periodic() {
@@ -39,26 +36,27 @@ public class PoseEstimate extends SubsystemBase {
 
     Pose2d llPose = RobotContainer.limelight.getPose();
 
-    if(llPose != null) {
-    
-      if(aprilTagSeen == false) {
-       
+    if (llPose != null) {
+
+      if (aprilTagSeen == false) {
+
         aprilTagSeen = true;
-        //RobotContainer.gyro.setInitialHeading(llPose.getRotation().getDegrees());
-        poseEstimator.resetPosition(RobotContainer.gyro.getRotation2d(), RobotContainer.swerveDrive.getModulePositions(), llPose);
-      
+        // RobotContainer.gyro.setInitialHeading(llPose.getRotation().getDegrees());
+        poseEstimator.resetPosition(RobotContainer.gyro.getRotation2d(),
+            RobotContainer.swerveDrive.getModulePositions(), llPose);
+
       } else {
         poseEstimator.addVisionMeasurement(llPose, RobotContainer.limelight.getLastTimeStamp());
       }
-   }
+    }
 
     Pose2d pose = getPose();
-    //poseEstimator.resetPosition(RobotContainer.gyro.getRotation2d(), RobotContainer.swerveDrive.getModulePositions(), pose);
+    // poseEstimator.resetPosition(RobotContainer.gyro.getRotation2d(),
+    // RobotContainer.swerveDrive.getModulePositions(), pose);
 
     SmartDashboard.putNumber("X Location", pose.getX());
     SmartDashboard.putNumber("Y Location", pose.getY());
     SmartDashboard.putNumber("Heading", pose.getRotation().getDegrees());
-  
 
   }
 }

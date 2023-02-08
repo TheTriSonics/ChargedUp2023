@@ -4,19 +4,15 @@
 
 package frc.robot.commands;
 
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.RobotData;
 import frc.robot.utilities.*;
-
-import javax.xml.xpath.XPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DriveSwerveProfile extends CommandBase implements Runnable {

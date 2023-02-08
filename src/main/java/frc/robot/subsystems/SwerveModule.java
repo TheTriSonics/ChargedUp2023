@@ -14,7 +14,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /** Add your docs here. */
 public class SwerveModule {
@@ -23,10 +22,6 @@ public class SwerveModule {
     private static final double kEffectiveRadius = kWheelRadius / kDriveGearRatio;
     private static final int kDriveResolution =  2048;
     private static final int kTurnResolution = 4096;
-  
-    private static final double kModuleMaxAngularVelocity = SwerveDriveTrain.kMaxAngularSpeed;
-    private static final double kModuleMaxAngularAcceleration =
-        2 * Math.PI; // radians per second squared
   
     private final TalonFX m_driveMotor;
     private final TalonFX m_turningMotor;
