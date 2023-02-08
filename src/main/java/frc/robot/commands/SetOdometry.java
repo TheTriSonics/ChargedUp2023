@@ -21,7 +21,8 @@ public class SetOdometry extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.swerveDrive.setOdometry(x, y, angle);
+    //RobotContainer.swerveDrive.setOdometry(x, y, angle);
+    RobotContainer.poseEstimator.setPose(x, y, angle);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

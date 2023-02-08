@@ -115,7 +115,9 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
     messages = new StringLogEntry(RobotContainer.dataLog, "messages");
     threadRunningLog = new BooleanLogEntry(RobotContainer.dataLog, "is notifier stopped");
 
-    Pose2d currentPose = RobotContainer.swerveDrive.getOdometry().getPoseMeters();
+    // Pose2d currentPose =
+    // RobotContainer.swerveDrive.getOdometry().getPoseMeters();
+    Pose2d currentPose = RobotContainer.poseEstimator.getPose();
     Point2d currentPosition = new Point2d(currentPose.getX(), currentPose.getY());
     Point2d targetPosition = curves[0].getPosition(0);
     initialOffset = Math2d.diff2d(targetPosition, currentPosition);
@@ -178,7 +180,7 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
       currentPosition = Math2d.diff2d(currentPosition, initialOffset);
       initialOffset = Math2d.diff2d(initialOffset, deltaInitialOffset);
     }
-    Pose2d currentPose = RobotContainer.swerveDrive.getOdometry().getPoseMeters();
+    Pose2d currentPose = RobotContainer.poseEstimator.getPose();
 
     Point2d deltaPosition = new Point2d(currentPosition.x - currentPose.getX(), currentPosition.y - currentPose.getY());
     double kP = 0.15;

@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.SetFieldRelative;
 import frc.robot.commands.SwerveDriveCommand;
+import frc.robot.commands.autonomous.DriveOnRampFromNearSide;
+import frc.robot.commands.autonomous.LoopyPathToChargeStation;
 import frc.robot.commands.autonomous.PickOneGamePiece;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -68,7 +70,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new PickOneGamePiece();
+    return new DriveOnRampFromNearSide();
   }
 
 }
