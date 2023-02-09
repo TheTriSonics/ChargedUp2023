@@ -35,6 +35,9 @@ public class SwerveModule {
   public TalonFX getDriveMotor() {
     return m_driveMotor;
   }
+public AnalogInput getTurnEncoder(){
+  return m_turnEncoder;
+}
 
   public SwerveModule(int driveMotorID, int turningMotorID, int turnEncoderChannel, int turnEncoderoffset, String name,
       boolean driveDisabled) {
@@ -131,6 +134,11 @@ public class SwerveModule {
   public double getTurnPosition() {
     return m_turnEncoder.getValue() - m_encoderOffset;
   }
+
+  public double getAbsoluteTurnPosition() {
+    return m_turnEncoder.getValue();
+  }
+  
 
   public void stopDriveMotor() {
     m_driveMotor.set(TalonFXControlMode.PercentOutput, 0);

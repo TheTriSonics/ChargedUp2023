@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -55,6 +56,10 @@ public class Robot extends TimedRobot {
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    SmartDashboard.putNumber("fl",RobotContainer.swerveDrive.getModules()[0].getTurnEncoder().getValue());
+    SmartDashboard.putNumber("fr",RobotContainer.swerveDrive.getModules()[1].getTurnEncoder().getValue());
+    SmartDashboard.putNumber("bl",RobotContainer.swerveDrive.getModules()[2].getTurnEncoder().getValue());
+    SmartDashboard.putNumber("br",RobotContainer.swerveDrive.getModules()[3].getTurnEncoder().getValue());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
