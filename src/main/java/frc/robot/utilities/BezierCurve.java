@@ -40,11 +40,4 @@ public class BezierCurve {
         }
         return l;
     }
-
-    public void print() {
-        System.out.println(P0.x + " " + P0.y);
-        System.out.println(P1.x + " " + P1.y);
-        System.out.println(P2.x + " " + P2.y);
-        System.out.println(P3.x + " " + P3.y);
-    }
 }

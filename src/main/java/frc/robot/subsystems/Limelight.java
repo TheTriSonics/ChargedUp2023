@@ -94,7 +94,6 @@ public class Limelight extends SubsystemBase {
     if (timesSeen < requiredTimesSeen)
       return;
     pose = new Pose2d(newPose[0] * INCHESPERMETER, newPose[1] * INCHESPERMETER, Rotation2d.fromDegrees(newPose[5]));
-    // System.out.println(pose[0] + " " + pose[1] + " " + pose[5]);
 
     String jsonDump = jsonDumpNetworkTableEntry.getString("{}");
 

@@ -94,20 +94,7 @@ public class SwerveModule {
     double turnAngle = 2 * Math.PI / kTurnResolution * currentTurnPosition;
     SwerveModuleState state = SwerveModuleState.optimize(desiredState, new Rotation2d(turnAngle));
 
-    // SmartDashboard.putNumber(name, currentTurnPosition);
-
-    // Calculate the drive output from the drive PID controller.
-    // final double driveOutput =
-    // m_drivePIDController.calculate(m_driveMotor.getSelectedSensorVelocity(),
-    // state.speedMetersPerSecond);
-
     double driveVelocity = state.speedMetersPerSecond / (2 * Math.PI * kEffectiveRadius) * kDriveResolution * 0.1;
-
-    // final double driveFeedforward =
-    // m_driveFeedforward.calculate(state.speedMetersPerSecond);
-    // if (name == "Front Right")
-    // System.out.println(name + " " + state.angle.getRadians() + " " + turnAngle);
-
     double setPosition = state.angle.getRadians() / (2 * Math.PI) * kTurnResolution;
     double revs = Math.round(currentTurnPosition / kTurnResolution);
     setPosition += revs * kTurnResolution;

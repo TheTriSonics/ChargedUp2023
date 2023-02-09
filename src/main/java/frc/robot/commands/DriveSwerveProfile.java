@@ -79,10 +79,6 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
     totalTime = (length - 2 * distanceAccel) / maxSpeed + 2 * tAccel; // total time to drive profile
     tDecel = totalTime - tAccel; // time we want to start decelerating
 
-    System.out.println("distance: " + length);
-    System.out.println("totTime : " + totalTime);
-    System.out.println("tDecel  : " + tDecel);
-
     // changes in velocity in different states
     deltaV[ACCEL] = maxAccel * deltaT;
     deltaV[COAST] = 0;
@@ -149,7 +145,6 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
     if (time == lastTime)
       return;
     deltaT = (time - lastTime) / 1000.0;
-    // System.out.println(time + " " + lastTime + " " + deltaT);
     lastTime = time;
     // update velocity depending on the state
     if (currentTime > tDecel)
@@ -164,7 +159,6 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
       stopNotifier();
       messages.append("profile finished: v < 0");
       threadRunningLog.append(isNotifierFinished());
-      System.out.println("FINSIHED: " + currentTime);
       return;
     }
 
@@ -206,13 +200,11 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
     // Prepare to update new parameter on curve
     double deltaS = currentVelocity * deltaT / currentTangent.length();
     double newS = currentS + deltaS;
-    // System.out.println(currentCurveNumber);
     if (newS > 1) { // we are going to the next curve
       // this is a little hacky, math could be improved, but probably not a big deal
       newS -= 1;
       currentCurveNumber += 1;
       if (currentCurveNumber >= numCurves) { // we've used up the curves so we're done
-        System.out.println("FINSIHED: " + currentTime);
         finished = true;
         currentCurveNumber -= 1;
         newS = 1;
@@ -242,8 +234,6 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
     poseHeading.append(currentPose.getRotation().getDegrees());
 
     // finally, tell the drive train what to do
-    // RobotContainer.swerveDrive.drive(xSpeed, ySpeed, rotSpeed);
-    // System.out.println(xSpeed + " " + ySpeed);
     RobotContainer.swerveDrive.drive(xSpeed, ySpeed, rotSpeed);
 
     // update current parameter on current curve and current time
@@ -256,7 +246,6 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
   public void end(boolean interrupted) {
     RobotContainer.swerveDrive.stopDriveMotor();
     notifier.stop();
-    System.out.println("FINISHED: " + RobotContainer.swerveDrive.getOdometry().getPoseMeters());
   }
 
   // Returns true when the command should end.

@@ -59,9 +59,6 @@ public class SwerveDriveCommand extends CommandBase {
     // the right by default.
     final var rot = -0.5 * m_rotLimiter.calculate(rotInput)
         * SwerveDriveTrain.kMaxAngularSpeed;
-
-    // System.out.println(xSpeed + " " + ySpeed + " " + rot + " " +
-    // System.currentTimeMillis());
     double scale = -1;
     if (RobotContainer.swerveDrive.isFieldRelative())
       scale = 1;

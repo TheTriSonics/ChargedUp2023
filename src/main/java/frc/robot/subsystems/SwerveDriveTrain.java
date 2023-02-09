@@ -230,8 +230,5 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
     SmartDashboard.putNumber("X", pose.getX());
     SmartDashboard.putNumber("Y", pose.getY());
     SmartDashboard.putNumber("Rotation", pose.getRotation().getDegrees());
-
-    // updateOdometry();
-    // System.out.println(fieldRelative);
   }
 }
