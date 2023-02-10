@@ -46,10 +46,10 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
    * private final SwerveModule m_frontRight = new SwerveModule(13, 23, 3, 3907,
    * "Front Right", false);
    */
-  private final SwerveModule m_frontLeft = new SwerveModule(10, 20, 0, 480, "Front Left", false);
-  private final SwerveModule m_backLeft = new SwerveModule(11, 21, 1, 3715, "Back Left", false);
-  private final SwerveModule m_backRight = new SwerveModule(12, 22, 2, 1910, "Back Right", false);
-  private final SwerveModule m_frontRight = new SwerveModule(13, 23, 3, 3932, "Front Right", false);
+  private final SwerveModule m_frontLeft = new SwerveModule(10, 20, 0, 2540-2048, "Front Left", false);
+  private final SwerveModule m_backLeft = new SwerveModule(11, 21, 1, 1679+2048, "Back Left", false);
+  private final SwerveModule m_backRight = new SwerveModule(12, 22, 2, 3947-2048, "Back Right", false);
+  private final SwerveModule m_frontRight = new SwerveModule(13, 23, 3, 1834+2048, "Front Right", false);
 
   boolean fieldRelative = true;
   boolean driveAligned = false;

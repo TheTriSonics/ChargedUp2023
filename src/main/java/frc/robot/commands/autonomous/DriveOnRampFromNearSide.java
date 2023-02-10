@@ -11,8 +11,8 @@ import frc.robot.RobotData;
 
 public class DriveOnRampFromNearSide extends CommandBase {
   /** Creates a new DriveOnRampFromNearSide. */
-  //double targetX = 177;
-  double targetX = 180;
+  double targetX = 177;
+  //double targetX = 180;
   double deltaX = 100;
 
   public DriveOnRampFromNearSide() {
@@ -24,7 +24,7 @@ public class DriveOnRampFromNearSide extends CommandBase {
   @Override
   public void initialize() {
     RobotContainer.swerveDrive.setFieldRelative(true);
-    //RobotContainer.poseEstimator.setPose(257, -51, 180);
+    RobotContainer.poseEstimator.setPose(257, -51, 180);
     //RobotContainer.poseEstimator.setPose(99, -51, 180);
     //RobotContainer.gyro.setInitialHeading(180);
   }

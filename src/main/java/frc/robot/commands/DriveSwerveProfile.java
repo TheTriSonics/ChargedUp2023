@@ -101,6 +101,7 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+  
     velocityX = new DoubleLogEntry(RobotContainer.dataLog, "velocityX");
     velocityY = new DoubleLogEntry(RobotContainer.dataLog, "velocityY");
     velocityZ = new DoubleLogEntry(RobotContainer.dataLog, "velocityZ");
