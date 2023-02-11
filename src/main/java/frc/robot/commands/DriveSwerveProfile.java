@@ -107,14 +107,15 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
     velocityZ = new DoubleLogEntry(RobotContainer.dataLog, "velocityZ");
     targetX = new DoubleLogEntry(RobotContainer.dataLog, "target X");
     targetY = new DoubleLogEntry(RobotContainer.dataLog, "target Y");
-    poseX = new DoubleLogEntry(RobotContainer.dataLog, "pose X");
-    poseY = new DoubleLogEntry(RobotContainer.dataLog, "pose Y");
+    poseX = new DoubleLogEntry(RobotContainer.dataLog, "old pose X");
+    poseY = new DoubleLogEntry(RobotContainer.dataLog, "old pose Y");
     errorX = new DoubleLogEntry(RobotContainer.dataLog, "error X");
     errorY = new DoubleLogEntry(RobotContainer.dataLog, "error Y");
     targetHeading = new DoubleLogEntry(RobotContainer.dataLog, "target heading");
-    poseHeading = new DoubleLogEntry(RobotContainer.dataLog, "pose heading");
+    poseHeading = new DoubleLogEntry(RobotContainer.dataLog, "old pose heading");
     messages = new StringLogEntry(RobotContainer.dataLog, "messages");
     threadRunningLog = new BooleanLogEntry(RobotContainer.dataLog, "is notifier stopped");
+  
 
     // Pose2d currentPose =
     // RobotContainer.swerveDrive.getOdometry().getPoseMeters();

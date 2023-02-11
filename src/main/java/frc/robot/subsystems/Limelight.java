@@ -13,20 +13,27 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Limelight extends SubsystemBase {
+public class Limelight extends SubsystemBase implements Runnable{
   final double INCHESPERMETER = 39.36;
   double tx, ty, tv;
   Pose2d pose;
   NetworkTableEntry jsonDumpNetworkTableEntry;
   NetworkTable networkTable;
   double lastTimeStampSeconds = 0;
-
+  double tsValue = 0;
+  Notifier thread;
   /** Creates a new Limelight. */
   public Limelight() {
     jsonDumpNetworkTableEntry = NetworkTableInstance.getDefault().getTable("limelight").getEntry("json");
+    thread = new Notifier(this);
+    thread.startPeriodic(0.02);
+  }
+  public double getTimeStamp(){
+    return tsValue;
   }
 
   public boolean isTargetValid() {
@@ -69,20 +76,8 @@ public class Limelight extends SubsystemBase {
   int timesSeen = 0;
   int requiredTimesSeen = 4;
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    /*
-     * tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").
-     * getDouble(0);
-     * SmartDashboard.putNumber("tx", tx);
-     * ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").
-     * getDouble(0);
-     * SmartDashboard.putNumber("ty", ty);
-     * tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").
-     * getDouble(0);
-     * SmartDashboard.putNumber("tv", tv);
-     */
+  public void run() {
+    
     double[] newPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose")
         .getDoubleArray(new double[] { 1234 });
     if (newPose.length < 6 || (newPose[0] == 0.0 && newPose[1] == 0)) {
@@ -103,7 +98,8 @@ public class Limelight extends SubsystemBase {
     try {
       ObjectMapper mapper = new ObjectMapper();
       JsonNode jsonNodeData = mapper.readTree(jsonDump);
-      double tsValue = jsonNodeData.path("Results").path("ts").asDouble();
+      tsValue = jsonNodeData.path("Results").path("ts").asDouble();
+      
       SmartDashboard.putNumber("tsValue", tsValue);
       if (tsValue != 0) {
         // Converts from milleseconds to seconds

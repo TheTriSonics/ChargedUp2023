@@ -10,8 +10,9 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.SetFieldRelative;
 import frc.robot.commands.SwerveDriveCommand;
-import frc.robot.commands.autonomous.DriveOnRampFromNearSide;
+import frc.robot.commands.autonomous.DriveOnRamp;
 import frc.robot.commands.autonomous.LoopyPathToChargeStation;
+import frc.robot.commands.autonomous.PickOneGamePiece;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -31,7 +32,7 @@ public class RobotContainer {
   public static Gyro gyro = new Gyro();
   public static SwerveDriveTrain swerveDrive = new SwerveDriveTrain();
   public static Limelight limelight = new Limelight();
-  public static PoseEstimate poseEstimator = new PoseEstimate();
+  public static PoseEstimate poseEstimator;
 
   public static CommandXboxController driver = new CommandXboxController(0);
   public static CommandXboxController operator = new CommandXboxController(1);
@@ -43,8 +44,11 @@ public class RobotContainer {
   public RobotContainer() {
     swerveDrive.setDefaultCommand(new SwerveDriveCommand(driver));
     configureButtonBindings();
+    startLogger();
+    poseEstimator = new PoseEstimate();
   }
-
+  public void stopLogger(){
+  }
   public void startLogger() {
     DataLogManager.start();
     dataLog = DataLogManager.getLog();
@@ -69,7 +73,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new LoopyPathToChargeStation();
+    return new PickOneGamePiece();
   }
 
 }

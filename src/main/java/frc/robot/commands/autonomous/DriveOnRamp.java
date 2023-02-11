@@ -9,13 +9,17 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.RobotData;
 
-public class DriveOnRampFromNearSide extends CommandBase {
+public class DriveOnRamp extends CommandBase {
   /** Creates a new DriveOnRampFromNearSide. */
   double targetX = 177;
   //double targetX = 180;
   double deltaX = 100;
+  boolean nearSide;
 
-  public DriveOnRampFromNearSide() {
+
+  public DriveOnRamp( boolean nearSide ) {
+    if (nearSide) targetX = 177;
+    else targetX = 179;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.swerveDrive);
   }
@@ -24,9 +28,7 @@ public class DriveOnRampFromNearSide extends CommandBase {
   @Override
   public void initialize() {
     RobotContainer.swerveDrive.setFieldRelative(true);
-    RobotContainer.poseEstimator.setPose(257, -51, 180);
-    //RobotContainer.poseEstimator.setPose(99, -51, 180);
-    //RobotContainer.gyro.setInitialHeading(180);
+  
   }
 
   double maxSpeed = 0.3;
@@ -54,7 +56,7 @@ public class DriveOnRampFromNearSide extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.swerveDrive.drive(0, 0, 0);
+    RobotContainer.swerveDrive.stopDriveMotor();
   }
 
   // Returns true when the command should end.
