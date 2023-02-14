@@ -4,9 +4,11 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,7 +35,10 @@ public class PoseEstimate extends SubsystemBase {
         RobotContainer.swerveDrive.getKinematics(),
         RobotContainer.gyro.getRotation2d(),
         RobotContainer.swerveDrive.getModulePositions(),
-        new Pose2d());
+        new Pose2d(),
+        VecBuilder.fill(2,2, Units.degreesToRadians(2)),
+        VecBuilder.fill(20, 40, Units.degreesToRadians(30))
+        );
   }
 
   public Pose2d getPose() {
@@ -69,7 +74,19 @@ public class PoseEstimate extends SubsystemBase {
     }
     double timeStamp = RobotContainer.limelight.getTimeStamp();
     boolean goodTag = false;
-    if (llPose != null /*&& timeStamp != lastTimeStamp*/) {
+    if (llPose != null && timeStamp != lastTimeStamp) {
+      //goodTag = true;
+      double deltaX = llPose.getX() - pose.getX();
+      double deltaY = llPose.getY() - pose.getY();
+      double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+      if (distance < 20) { // && llPose.getX() > 160) {
+        goodTag = true;
+        llPose = new Pose2d(llPose.getX(),llPose.getY(), pose.getRotation());
+        poseEstimator.addVisionMeasurement(llPose, RobotContainer.limelight.getLastTimeStamp());
+      }
+    
+    }
+      /*
       lastTimeStamp = timeStamp;
       if (aprilTagSeen == false) {
         goodTag = true;
@@ -96,7 +113,8 @@ public class PoseEstimate extends SubsystemBase {
           }
         }
       }
-    }
+      */
+    
     usedLimeLight.append(goodTag);
     // poseEstimator.resetPosition(RobotContainer.gyro.getRotation2d(),
     // RobotContainer.swerveDrive.getModulePositions(), pose);

@@ -11,8 +11,10 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.SetFieldRelative;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.commands.autonomous.DriveOnRamp;
+import frc.robot.commands.autonomous.GrabThenRamp;
 import frc.robot.commands.autonomous.LoopyPathToChargeStation;
 import frc.robot.commands.autonomous.PickOneGamePiece;
+import frc.robot.commands.autonomous.ScoreTwo;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -73,7 +75,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new PickOneGamePiece();
+    return new ScoreTwo();
   }
 
 }

@@ -72,7 +72,7 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
   public SwerveDriveTrain() {
     RobotContainer.gyro.reset();
     notifier = new Notifier(this);
-    // notifier.startPeriodic(0.01);
+    notifier.startPeriodic(0.01);
     m_odometry.resetPosition(new Rotation2d(), defaultPos, new Pose2d());
   }
 

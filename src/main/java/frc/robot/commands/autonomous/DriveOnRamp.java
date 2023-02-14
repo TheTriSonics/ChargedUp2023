@@ -5,6 +5,7 @@
 package frc.robot.commands.autonomous;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.RobotData;
@@ -15,13 +16,15 @@ public class DriveOnRamp extends CommandBase {
   //double targetX = 180;
   double deltaX = 100;
   boolean nearSide;
+  Timer timer;
 
 
   public DriveOnRamp( boolean nearSide ) {
     if (nearSide) targetX = 177;
-    else targetX = 179;
+    else targetX = 178;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.swerveDrive);
+    timer = new Timer();
   }
 
   // Called when the command is initially scheduled.
@@ -49,6 +52,9 @@ public class DriveOnRamp extends CommandBase {
       return;
     } 
     
+    if (Math.abs(deltaX) <= 2) {
+      timer.start();
+    }
     RobotContainer.swerveDrive.drive(-maxSpeed * RobotData.maxSpeed, 0, 0);
      
   }
@@ -63,6 +69,6 @@ public class DriveOnRamp extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    return Math.abs(deltaX) < 2;
+    return timer.hasElapsed(4); //Math.abs(deltaX) < 2;
   }
 }

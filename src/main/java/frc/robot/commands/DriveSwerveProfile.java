@@ -73,7 +73,7 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
     maxSpeed = RobotData.maxSpeed * power; // maximum speed we're allowed to drive, we want to cap it
     maxAccel = RobotData.maxAcceleration; // maximum acceleration, depends on robot
     maxOmega = RobotData.maxAngularSpeed; // maximum angular speed, depends on robot
-    maxOmegaAccel = RobotData.maxAngularAcceleration; // maximum angular acceleration, depends on robot
+    maxOmegaAccel = 0.4 * RobotData.maxAngularAcceleration; // maximum angular acceleration, depends on robot
     double tAccel = maxSpeed / maxAccel; // time required to accelerate to maximum speed
     double distanceAccel = 0.5 * maxAccel * tAccel * tAccel; // distance traveled while accelerating to full speed
     totalTime = (length - 2 * distanceAccel) / maxSpeed + 2 * tAccel; // total time to drive profile
@@ -117,8 +117,7 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
     threadRunningLog = new BooleanLogEntry(RobotContainer.dataLog, "is notifier stopped");
   
 
-    // Pose2d currentPose =
-    // RobotContainer.swerveDrive.getOdometry().getPoseMeters();
+     //Pose2d currentPose = RobotContainer.swerveDrive.getOdometry().getPoseMeters();
     Pose2d currentPose = RobotContainer.poseEstimator.getPose();
     Point2d currentPosition = new Point2d(currentPose.getX(), currentPose.getY());
     Point2d targetPosition = curves[0].getPosition(0);
@@ -183,7 +182,7 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
       initialOffset = Math2d.diff2d(initialOffset, deltaInitialOffset);
     }
     Pose2d currentPose = RobotContainer.poseEstimator.getPose();
-
+    //Pose2d currentPose = RobotContainer.swerveDrive.getOdometry().getPoseMeters();
     Point2d deltaPosition = new Point2d(currentPosition.x - currentPose.getX(), currentPosition.y - currentPose.getY());
     double kP = 0.15;
     double errorSpeed = kP * deltaPosition.length() / deltaT;
