@@ -8,6 +8,8 @@ import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.SetFieldRelative;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.commands.autonomous.DriveOnRamp;
@@ -15,6 +17,8 @@ import frc.robot.commands.autonomous.GrabThenRamp;
 import frc.robot.commands.autonomous.LoopyPathToChargeStation;
 import frc.robot.commands.autonomous.PickOneGamePiece;
 import frc.robot.commands.autonomous.ScoreTwo;
+import frc.robot.commands.autonomous.ScoreTwoGrabThird;
+import frc.robot.commands.autonomous.ScoreTwoThenRamp;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -39,6 +43,7 @@ public class RobotContainer {
   public static CommandXboxController driver = new CommandXboxController(0);
   public static CommandXboxController operator = new CommandXboxController(1);
   public static DataLog dataLog;
+  SendableChooser<Command> chooser = new SendableChooser<>();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -48,6 +53,13 @@ public class RobotContainer {
     configureButtonBindings();
     startLogger();
     poseEstimator = new PoseEstimate();
+    chooser.addOption("Grab Then Ramp", new GrabThenRamp());
+    chooser.addOption("Loopy Path to Charge Station", new LoopyPathToChargeStation());
+    chooser.addOption("Pick One Game Piece", new PickOneGamePiece());
+    chooser.addOption("Score Two Game Pieces", new ScoreTwo());
+    chooser.addOption("Score Two Then Ramp", new ScoreTwoThenRamp());
+    chooser.addOption("Score Two Grab Third", new ScoreTwoGrabThird());
+    SmartDashboard.putData("Auton Chooser", chooser);
   }
   public void stopLogger(){
   }
@@ -75,7 +87,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new ScoreTwo();
+    return chooser.getSelected();
   }
 
 }
