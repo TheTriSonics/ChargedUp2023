@@ -12,8 +12,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.SetFieldRelative;
 import frc.robot.commands.SwerveDriveCommand;
+import frc.robot.commands.autonomous.AutonomousProfiles;
+import frc.robot.commands.autonomous.CenterDriveUpRamp;
 import frc.robot.commands.autonomous.DriveOnRamp;
 import frc.robot.commands.autonomous.GrabThenRamp;
+import frc.robot.commands.autonomous.InitializedCommandGroup;
 import frc.robot.commands.autonomous.LoopyPathToChargeStation;
 import frc.robot.commands.autonomous.PickOneGamePiece;
 import frc.robot.commands.autonomous.ScoreTwo;
@@ -43,7 +46,11 @@ public class RobotContainer {
   public static CommandXboxController driver = new CommandXboxController(0);
   public static CommandXboxController operator = new CommandXboxController(1);
   public static DataLog dataLog;
-  SendableChooser<Command> chooser = new SendableChooser<>();
+  static String alliance = "R";
+  static String position = "R";
+  SendableChooser<InitializedCommandGroup> chooser = new SendableChooser<>();
+  SendableChooser<String> allianceChooser = new SendableChooser<>();
+  SendableChooser<String> positionChooser = new SendableChooser<>();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -53,19 +60,39 @@ public class RobotContainer {
     configureButtonBindings();
     startLogger();
     poseEstimator = new PoseEstimate();
-    chooser.addOption("Grab Then Ramp", new GrabThenRamp());
-    chooser.addOption("Loopy Path to Charge Station", new LoopyPathToChargeStation());
-    chooser.addOption("Pick One Game Piece", new PickOneGamePiece());
-    chooser.addOption("Score Two Game Pieces", new ScoreTwo());
-    chooser.addOption("Score Two Then Ramp", new ScoreTwoThenRamp());
-    chooser.addOption("Score Two Grab Third", new ScoreTwoGrabThird());
+    new AutonomousProfiles();
+    //chooser.addOption("Grab Then Ramp", new GrabThenRamp());
+    //chooser.addOption("Loopy Path to Charge Station", new LoopyPathToChargeStation());
+    chooser.setDefaultOption("Pick One Game Piece", new PickOneGamePiece());
+    chooser.addOption("Pick One Game Piece2", new PickOneGamePiece());
+    
+    //chooser.addOption("Score Two Game Pieces", new ScoreTwo());
+    //chooser.addOption("Score Two Then Ramp", new ScoreTwoThenRamp());
+    //chooser.addOption("Score Two Grab Third", new ScoreTwoGrabThird());
+    //chooser.addOption("Center Drive Up Ramp", new CenterDriveUpRamp());
     SmartDashboard.putData("Auton Chooser", chooser);
+    allianceChooser.setDefaultOption("Red", "R");
+    allianceChooser.addOption("Blue", "B");
+    SmartDashboard.putData("Alliance Chooser", allianceChooser);
+    positionChooser.setDefaultOption("Left", "L");
+    positionChooser.addOption("Right", "R");
+    SmartDashboard.putData("Position Chooser", positionChooser);
   }
   public void stopLogger(){
   }
   public void startLogger() {
     DataLogManager.start();
     dataLog = DataLogManager.getLog();
+  }
+  public void update(){
+    String allianceChoice = allianceChooser.getSelected();
+    String positionChoice = positionChooser.getSelected();
+    if (allianceChoice != null) alliance = allianceChoice;
+    if (positionChoice != null) position = positionChoice;    
+  }
+
+  public static String getMatchData() {
+    return alliance + position;
   }
 
   /**
@@ -87,7 +114,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return chooser.getSelected();
+    InitializedCommandGroup command = chooser.getSelected();
+    command.initialization();
+    return command;
   }
 
 }

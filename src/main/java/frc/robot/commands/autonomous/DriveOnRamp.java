@@ -20,8 +20,8 @@ public class DriveOnRamp extends CommandBase {
 
 
   public DriveOnRamp( boolean nearSide ) {
-    if (nearSide) targetX = 177;
-    else targetX = 178;
+    if (nearSide) targetX = 171;
+    else targetX = 168;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.swerveDrive);
     timer = new Timer();
@@ -46,15 +46,17 @@ public class DriveOnRamp extends CommandBase {
       RobotContainer.swerveDrive.drive(maxSpeed * RobotData.maxSpeed, 0, 0);
       return;
     }
+    if (Math.abs(deltaX) <= 2) {
+      timer.start();
+     // rampDown = 4;
+     // maxSpeed = 0.4;
+    }
     if(Math.abs(deltaX) <= rampDown) {
       double xSpeed = maxSpeed/rampDown * deltaX * RobotData.maxSpeed;
       RobotContainer.swerveDrive.drive(xSpeed, 0, 0);
       return;
     } 
-    
-    if (Math.abs(deltaX) <= 2) {
-      timer.start();
-    }
+   
     RobotContainer.swerveDrive.drive(-maxSpeed * RobotData.maxSpeed, 0, 0);
      
   }
@@ -69,6 +71,7 @@ public class DriveOnRamp extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    return timer.hasElapsed(4); //Math.abs(deltaX) < 2;
+   return timer.hasElapsed(4); //
+  // return Math.abs(deltaX) < 2;
   }
 }

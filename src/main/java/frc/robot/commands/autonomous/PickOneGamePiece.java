@@ -5,6 +5,7 @@
 package frc.robot.commands.autonomous;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.RobotContainer;
 import frc.robot.commands.DriveSwerveProfile;
 import frc.robot.commands.SetOdometry;
 import frc.robot.commands.Wait;
@@ -12,34 +13,25 @@ import frc.robot.commands.Wait;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class PickOneGamePiece extends SequentialCommandGroup {
-  double[][] waypoints = new double[][] {
-      { 250.0, 30.0 },
-      { 190.87931749063435, 30.397353902458427 },
-      { 150.5344885237755, 30.10596326884294 },
-      { 67.03448798270918, 20.390731496573693 }
-  };
-  double[] headings = new double[] {
-      100, 60, 0
-  };
-  double[][] waypoints2 = new double[][] {
-    { 67.03448798270918, 20.390731496573693 },
-    { 107.5344885237755, 26.10596326884294 },
-    { 190.87931749063435, 30.397353902458427 },
-    { 250.0, 30.0 }
-  };
-  double[] headings2 = new double[] {
-      90, 180, 180
-  };
-
+public class PickOneGamePiece extends InitializedCommandGroup {
+  
   /** Creates a new PickOneGamePiece. */
-  public PickOneGamePiece() {
+  public PickOneGamePiece() {}
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+  public void initialization() {
+    String matchData = RobotContainer.getMatchData();
+    System.out.println(matchData);
+    double[] odometry = AutonomousProfiles.initialOdometries.get(matchData);
+    double[][] firstWaypoints = AutonomousProfiles.driveToFirstGamePieceWaypoints.get(matchData);
+    double[] firstHeadings = AutonomousProfiles.driveToFirstGamePieceHeadings.get(matchData);
+    double[][] secondWaypoints = AutonomousProfiles.firstGamePieceToSecondPlacementWaypoints.get(matchData);
+    double[] secondHeadings = AutonomousProfiles.firstGamePieceToSecondPlacementHeadings.get(matchData);
+
     addCommands(
-        new SetOdometry(250, 30, 180),
-        new DriveSwerveProfile(waypoints, headings, 0.25), 
+        new SetOdometry(odometry[0], odometry[1], odometry[2]),
+        new DriveSwerveProfile(firstWaypoints, firstHeadings, 0.4), 
         new Wait(1000),
-        new DriveSwerveProfile(waypoints2, headings2, 0.25));
+        new DriveSwerveProfile(secondWaypoints, secondHeadings, 0.4));
   }
 }

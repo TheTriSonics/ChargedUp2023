@@ -59,21 +59,23 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
 
   public DriveSwerveProfile(double[][] waypoints, double[] headings,
       double power) {
+    System.out.println("way points" + waypoints.length);
     // set up input data: headings and bezier curves
     this.headings = headings;
     curves = (new Spline(waypoints)).buildTrajectory();
     numCurves = curves.length;
-
+    System.out.println("# of curves" + numCurves);
     // length of the curve in inches
     length = 0;
     for (int i = 0; i < numCurves; i++)
       length += curves[i].length();
+    System.out.println("Total Length" + length);
 
     // set up some robot data
     maxSpeed = RobotData.maxSpeed * power; // maximum speed we're allowed to drive, we want to cap it
     maxAccel = RobotData.maxAcceleration; // maximum acceleration, depends on robot
     maxOmega = RobotData.maxAngularSpeed; // maximum angular speed, depends on robot
-    maxOmegaAccel = 0.4 * RobotData.maxAngularAcceleration; // maximum angular acceleration, depends on robot
+    maxOmegaAccel = RobotData.maxAngularAcceleration; // maximum angular acceleration, depends on robot
     double tAccel = maxSpeed / maxAccel; // time required to accelerate to maximum speed
     double distanceAccel = 0.5 * maxAccel * tAccel * tAccel; // distance traveled while accelerating to full speed
     totalTime = (length - 2 * distanceAccel) / maxSpeed + 2 * tAccel; // total time to drive profile

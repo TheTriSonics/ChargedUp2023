@@ -37,7 +37,8 @@ public class PoseEstimate extends SubsystemBase {
         RobotContainer.swerveDrive.getModulePositions(),
         new Pose2d(),
         VecBuilder.fill(2,2, Units.degreesToRadians(2)),
-        VecBuilder.fill(20, 40, Units.degreesToRadians(30))
+        VecBuilder.fill(36, 36, Units.degreesToRadians(30))
+        // VecBuilder.fill(10, 20, Units.degreesToRadians(30))
         );
   }
 
@@ -52,7 +53,7 @@ public class PoseEstimate extends SubsystemBase {
         pose);
   }
 
-  boolean aprilTagSeen = false;
+  boolean aprilTagSeen = true;
 
   @Override
   public void periodic() {
@@ -75,16 +76,24 @@ public class PoseEstimate extends SubsystemBase {
     double timeStamp = RobotContainer.limelight.getTimeStamp();
     boolean goodTag = false;
     if (llPose != null && timeStamp != lastTimeStamp) {
-      //goodTag = true;
-      double deltaX = llPose.getX() - pose.getX();
-      double deltaY = llPose.getY() - pose.getY();
-      double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-      if (distance < 20) { // && llPose.getX() > 160) {
+      if (aprilTagSeen == false) {
         goodTag = true;
-        llPose = new Pose2d(llPose.getX(),llPose.getY(), pose.getRotation());
-        poseEstimator.addVisionMeasurement(llPose, RobotContainer.limelight.getLastTimeStamp());
+        aprilTagSeen = true;
+        // RobotContainer.gyro.setInitialHeading(llPose.getRotation().getDegrees());
+        poseEstimator.resetPosition(RobotContainer.gyro.getRotation2d(),
+            RobotContainer.swerveDrive.getModulePositions(), llPose);
+
+      } else {
+      //goodTag = true;
+        double deltaX = llPose.getX() - pose.getX();
+        double deltaY = llPose.getY() - pose.getY();
+        double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        if (distance < 40) { // && llPose.getX() > 160) {
+          goodTag = true;
+          llPose = new Pose2d(llPose.getX(),llPose.getY(), pose.getRotation());
+          poseEstimator.addVisionMeasurement(llPose, RobotContainer.limelight.getLastTimeStamp());
+        }
       }
-    
     }
       /*
       lastTimeStamp = timeStamp;
