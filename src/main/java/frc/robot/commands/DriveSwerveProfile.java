@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import frc.robot.RobotContainer;
 import frc.robot.RobotData;
+import frc.robot.commands.autonomous.Profile;
 import frc.robot.utilities.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -56,6 +57,9 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
       velocityX, velocityY, velocityZ;
   StringLogEntry messages;
   BooleanLogEntry threadRunningLog;
+  public DriveSwerveProfile(Profile profile, double power) {
+    this(profile.waypoints, profile.headings, power);
+  }
 
   public DriveSwerveProfile(double[][] waypoints, double[] headings,
       double power) {

@@ -21,6 +21,7 @@ import frc.robot.commands.autonomous.LoopyPathToChargeStation;
 import frc.robot.commands.autonomous.PickOneGamePiece;
 import frc.robot.commands.autonomous.ScoreTwo;
 import frc.robot.commands.autonomous.ScoreTwoGrabThird;
+import frc.robot.commands.autonomous.ScoreTwoThenLoopyToRamp;
 import frc.robot.commands.autonomous.ScoreTwoThenRamp;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -63,8 +64,10 @@ public class RobotContainer {
     new AutonomousProfiles();
     //chooser.addOption("Grab Then Ramp", new GrabThenRamp());
     //chooser.addOption("Loopy Path to Charge Station", new LoopyPathToChargeStation());
-    chooser.setDefaultOption("Pick One Game Piece", new PickOneGamePiece());
-    chooser.addOption("Pick One Game Piece2", new PickOneGamePiece());
+    chooser.addOption("Score Two Then Loopy To Ramp", new ScoreTwoThenLoopyToRamp());
+    chooser.addOption("Pick One Game Piece", new PickOneGamePiece());
+    chooser.addOption("Score Two Then Center Ramp", new ScoreTwoThenRamp());
+    chooser.setDefaultOption("Score Second To Third Gamepiece", new ScoreTwoGrabThird());
     
     //chooser.addOption("Score Two Game Pieces", new ScoreTwo());
     //chooser.addOption("Score Two Then Ramp", new ScoreTwoThenRamp());
