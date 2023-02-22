@@ -20,4 +20,13 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  public static class RobotConstants {
+    //motors
+    public static final int SLIDE_MOTOR = 0;
+
+    //solenoids
+    public static final int SLIDE_SOLENOID = 0;
+
+    
+  }
 }
