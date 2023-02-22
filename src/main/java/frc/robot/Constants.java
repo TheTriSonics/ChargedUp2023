@@ -25,10 +25,16 @@ public final class Constants {
     public static final int SLIDE_MOTOR = 0;
     public static final int LEFT_LIFT_MOTOR = 0;
     public static final int RIGHT_LIFT_MOTOR = 0;
+    public static final int LEFT_INTAKE_MOTOR = 0;
+    public static final int RIGHT_INTAKE_MOTOR = 0;
 
     //solenoids
     public static final int SLIDE_SOLENOID = 0;
+    public static final int INTAKE_CLAMP_SOLENOID = 0;
+    public static final int INTAKE_PIVOT_SOLENOID = 0;
 
+    //sensors
+    public static final int INTAKE_PHOTO_EYE = 0;
 
   }
 }
