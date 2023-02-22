@@ -23,10 +23,12 @@ public final class Constants {
   public static class RobotConstants {
     //motors
     public static final int SLIDE_MOTOR = 0;
+    public static final int LEFT_LIFT_MOTOR = 0;
+    public static final int RIGHT_LIFT_MOTOR = 0;
 
     //solenoids
     public static final int SLIDE_SOLENOID = 0;
 
-    
+
   }
 }

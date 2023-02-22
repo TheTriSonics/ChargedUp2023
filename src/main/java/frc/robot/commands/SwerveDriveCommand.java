@@ -9,7 +9,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.SwerveDriveTrain;
+import frc.robot.subsystems.mechanical.SwerveDriveTrain;
 
 public class SwerveDriveCommand extends CommandBase {
   private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(1.5);
