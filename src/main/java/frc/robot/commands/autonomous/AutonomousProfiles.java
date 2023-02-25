@@ -22,6 +22,10 @@ public class AutonomousProfiles {
 
     static Map<String, Profile> thirdPiecePlacement = new HashMap<String, Profile>();
 
+    static Map<String, Profile> centerLeaveCommunityGetPiece = new HashMap<String, Profile>();
+
+    static Map<String, Profile> centerLeaveCommunityToRamp = new HashMap<String, Profile>();
+
     public AutonomousProfiles() {
         initialOdometries.put("RR", new double[] {250, 40, 180});
         initialOdometries.put("RL", new double[] {250, -141, 180});
@@ -290,10 +294,30 @@ public class AutonomousProfiles {
                 0, 0, 0, 0
             }
         ));
-            
-        
-              
 
+        centerLeaveCommunityGetPiece.put("RR",
+        new Profile(
+            new double[][] {
+                {250, -40},
+                {100, -40},
+                {64, -70.5}
+            },
+            new double[] {
+                180, 0
+            }
+        ));
+        
+        centerLeaveCommunityToRamp.put("RR",
+        new Profile(
+            new double[][] {
+                {64, -70.5},
+                {82, -60},
+                {100, -40}
+            },
+            new double[] {
+                180, 180
+            }
+        ));
                
         
     }

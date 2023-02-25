@@ -14,6 +14,7 @@ import frc.robot.commands.SetFieldRelative;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.commands.autonomous.AutonomousProfiles;
 import frc.robot.commands.autonomous.CenterDriveUpRamp;
+import frc.robot.commands.autonomous.CenterLeaveCommunity;
 import frc.robot.commands.autonomous.DriveOnRamp;
 import frc.robot.commands.autonomous.GrabThenRamp;
 import frc.robot.commands.autonomous.InitializedCommandGroup;
@@ -23,7 +24,7 @@ import frc.robot.commands.autonomous.ScoreTwo;
 import frc.robot.commands.autonomous.ScoreTwoGrabThird;
 import frc.robot.commands.autonomous.ScoreTwoThenLoopyToRamp;
 import frc.robot.commands.autonomous.ScoreTwoThenRamp;
-import frc.robot.subsystems.*;
+import frc.robot.commands.autonomous.StrafeToVisionTarget;
 import frc.robot.subsystems.controls.PoseEstimate;
 import frc.robot.subsystems.mechanical.SwerveDriveTrain;
 import frc.robot.subsystems.sensors.Gyro;
@@ -71,7 +72,8 @@ public class RobotContainer {
     chooser.addOption("Score Two Then Loopy To Ramp", new ScoreTwoThenLoopyToRamp());
     chooser.addOption("Pick One Game Piece", new PickOneGamePiece());
     chooser.addOption("Score Two Then Center Ramp", new ScoreTwoThenRamp());
-    chooser.setDefaultOption("Score Second To Third Gamepiece", new ScoreTwoGrabThird());
+    chooser.addOption("Score Second To Third Gamepiece", new ScoreTwoGrabThird());
+    chooser.setDefaultOption("Drive Over ramp", new CenterLeaveCommunity());
     
     //chooser.addOption("Score Two Game Pieces", new ScoreTwo());
     //chooser.addOption("Score Two Then Ramp", new ScoreTwoThenRamp());
@@ -113,6 +115,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     driver.x().onTrue(new SetFieldRelative(false));
     driver.b().onTrue(new SetFieldRelative(true));
+    driver.y().whileTrue(new StrafeToVisionTarget(true));
+    driver.a().whileTrue(new StrafeToVisionTarget(false));
   }
 
   /**
