@@ -10,8 +10,13 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.AdvanceState;
 import frc.robot.commands.SetFieldRelative;
+import frc.robot.commands.SetGamePiece;
+import frc.robot.commands.SetScoringLevel;
 import frc.robot.commands.SwerveDriveCommand;
+import frc.robot.commands.autonomous.AutoPlaceGamePiece;
+import frc.robot.commands.autonomous.AutoScore;
 import frc.robot.commands.autonomous.AutonomousProfiles;
 import frc.robot.commands.autonomous.CenterDriveUpRamp;
 import frc.robot.commands.autonomous.CenterLeaveCommunity;
@@ -25,8 +30,10 @@ import frc.robot.commands.autonomous.ScoreTwoGrabThird;
 import frc.robot.commands.autonomous.ScoreTwoThenLoopyToRamp;
 import frc.robot.commands.autonomous.ScoreTwoThenRamp;
 import frc.robot.commands.autonomous.StrafeToVisionTarget;
+import frc.robot.subsystems.OperatorStateMachine;
 import frc.robot.subsystems.controls.PoseEstimate;
-import frc.robot.subsystems.mechanical.SwerveDriveTrain;
+import frc.robot.subsystems.mechanical.HorizontalLiftSubsystem;
+import frc.robot.subsystems.mechanical.*;
 import frc.robot.subsystems.sensors.Gyro;
 import frc.robot.subsystems.sensors.Limelight;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -43,12 +50,17 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-
+  
   public static Gyro gyro = new Gyro();
   public static SwerveDriveTrain swerveDrive = new SwerveDriveTrain();
   public static Limelight limelight = new Limelight();
   public static PoseEstimate poseEstimator;
-
+  public static HorizontalLiftSubsystem horizontalLiftSubsystem = new HorizontalLiftSubsystem();
+  public static VerticalLiftSubsystem verticalLiftSubsystem = new VerticalLiftSubsystem();
+  public static Pneumatics pneumatics = new Pneumatics();
+  public static IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  public static OperatorStateMachine operatorStateMachine = new OperatorStateMachine();
+ 
   public static CommandXboxController driver = new CommandXboxController(0);
   public static CommandXboxController operator = new CommandXboxController(1);
   public static DataLog dataLog;
@@ -86,6 +98,9 @@ public class RobotContainer {
     positionChooser.setDefaultOption("Left", "L");
     positionChooser.addOption("Right", "R");
     SmartDashboard.putData("Position Chooser", positionChooser);
+
+    horizontalLiftSubsystem.resetPosition();
+    verticalLiftSubsystem.resetPosition();
   }
   public void stopLogger(){
   }
@@ -117,6 +132,15 @@ public class RobotContainer {
     driver.b().onTrue(new SetFieldRelative(true));
     driver.y().whileTrue(new StrafeToVisionTarget(true));
     driver.a().whileTrue(new StrafeToVisionTarget(false));
+    driver.rightBumper().whileTrue(new AutoScore());
+
+    
+    operator.rightBumper().onTrue(new AdvanceState());
+    operator.leftTrigger(0.5).onTrue(new SetGamePiece(true));
+    operator.rightTrigger(0.5).onTrue(new SetGamePiece(false));
+    operator.a().onTrue(new SetScoringLevel(OperatorStateMachine.LOW));
+    operator.b().onTrue(new SetScoringLevel(OperatorStateMachine.MID));
+    operator.y().onTrue(new SetScoringLevel(OperatorStateMachine.HIGH));    
   }
 
   /**
@@ -127,7 +151,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     InitializedCommandGroup command = chooser.getSelected();
     command.initialization();
-    return command;
+    return new AutoPlaceGamePiece(false, 2);
   }
 
 }

@@ -4,39 +4,49 @@
 
 package frc.robot.subsystems.mechanical;
 
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.RobotConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
-  private final Spark m_leftIntakeMotor = new Spark(RobotConstants.LEFT_INTAKE_MOTOR);
-  private final Spark m_rightIntakeMotor = new Spark(RobotConstants.RIGHT_INTAKE_MOTOR);
-  private final AnalogInput m_photoEye = new AnalogInput(RobotConstants.INTAKE_PHOTO_EYE);
-  private final Solenoid m_clampSolenoid = new Solenoid(PneumaticsModuleType.REVPH, RobotConstants.INTAKE_CLAMP_SOLENOID);
-  private final Solenoid m_pivotSolenoid = new Solenoid(PneumaticsModuleType.REVPH, RobotConstants.INTAKE_PIVOT_SOLENOID);
+  private final CANSparkMax m_leftIntakeMotor = new CANSparkMax(RobotConstants.LEFT_INTAKE_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax m_rightIntakeMotor = new CANSparkMax(RobotConstants.RIGHT_INTAKE_MOTOR, MotorType.kBrushless);
+  
+  // private final AnalogInput m_photoEye = new AnalogInput(RobotConstants.INTAKE_PHOTO_EYE);
+  
 
   /** Creates a new IntakeSubsystem. */
   public IntakeSubsystem() {
-   m_rightIntakeMotor.setInverted(true);
+    m_rightIntakeMotor.setIdleMode(IdleMode.kBrake);
+    m_leftIntakeMotor.setIdleMode(IdleMode.kBrake);
+    //m_rightIntakeMotor.setInverted(true);
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    double power = 0;
+    if (RobotContainer.operator.getHID().getLeftTriggerAxis() >= 0.5) {
+      power = 0.5;
+    }
+    
+    if (RobotContainer.operator.getHID().getRightTriggerAxis() >= 0.5) {
+      power = -0.5;
+    }
+
+    setPower(power);
   }
+  
   public void setPower(double power) {
     m_leftIntakeMotor.set(power);
-    m_rightIntakeMotor.set(power);
-  }
-  public void setClamp(boolean open) {
-    m_clampSolenoid.set(open);
-  }
-  public void setPivot(boolean open) {
-    m_pivotSolenoid.set(open);
+    m_rightIntakeMotor.set(-power);
   }
 }

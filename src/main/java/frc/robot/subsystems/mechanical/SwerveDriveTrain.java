@@ -27,8 +27,8 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
   public static final double kMaxAngularSpeed = 2 * Math.PI; // 1 rotation per second
 
   // TODO: Location of wheels from center of robot need to be defined
-  private final static double halfWheelBase = 23.251 / 2.0;
-  private final static double halfTrackWidth = 22.25 / 2.0;
+  private final static double halfWheelBase = 27.750/2.0;  // 23.251 / 2.0;
+  private final static double halfTrackWidth = 21.250/2.0;  // 22.25 / 2.0;
   private final Translation2d m_frontLeftLocation = new Translation2d(halfWheelBase, halfTrackWidth);
   private final Translation2d m_frontRightLocation = new Translation2d(halfWheelBase, -halfTrackWidth);
   private final Translation2d m_backLeftLocation = new Translation2d(-halfWheelBase, halfTrackWidth);
@@ -46,10 +46,10 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
    * private final SwerveModule m_frontRight = new SwerveModule(13, 23, 3, 3907,
    * "Front Right", false);
    */
-  private final SwerveModule m_frontLeft = new SwerveModule(10, 20, 0, 1025, "Front Left", false);
-  private final SwerveModule m_backLeft = new SwerveModule(11, 21, 1, 3732, "Back Left", false);
-  private final SwerveModule m_backRight = new SwerveModule(12, 22, 2, 1888, "Back Right", false);
-  private final SwerveModule m_frontRight = new SwerveModule(13, 23, 3, 3907, "Front Right", false);
+  private final SwerveModule m_backRight = new SwerveModule(10, 20, 0, 3482, "Front Left", false);
+  private final SwerveModule m_frontRight = new SwerveModule(11, 21, 1, 325, "Back Left", false);
+  private final SwerveModule m_frontLeft = new SwerveModule(12, 22, 2, 3467, "Back Right", false);
+  private final SwerveModule m_backLeft = new SwerveModule(13, 23, 3, 3066, "Front Right", false);
 
   boolean fieldRelative = true;
   boolean driveAligned = false;

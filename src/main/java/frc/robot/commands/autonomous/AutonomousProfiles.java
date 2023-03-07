@@ -8,6 +8,8 @@ import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+
 /** Add your docs here. */
 public class AutonomousProfiles {
     
@@ -25,6 +27,27 @@ public class AutonomousProfiles {
     static Map<String, Profile> centerLeaveCommunityGetPiece = new HashMap<String, Profile>();
 
     static Map<String, Profile> centerLeaveCommunityToRamp = new HashMap<String, Profile>();
+
+    static Map<String, Profile> autoScore = new HashMap<String, Profile>();
+
+    private static double autoScoreX = 250;
+    private static double autoScoreY = -50;
+    private static double autoScoreHeading = 0;
+    private static double autoScoreInitialX;
+    private static double autoScoreInitialY;
+
+    public static void setInitialPose(double x, double y) {
+        autoScoreInitialX = x;
+        autoScoreInitialY = y;
+    }
+
+    public static void setAutoScorePose(double x, double y, double heading) {
+        autoScoreX = x;
+        autoScoreY = y;
+        autoScoreHeading = heading;
+    }
+
+
 
     public AutonomousProfiles() {
         initialOdometries.put("RR", new double[] {250, 40, 180});
@@ -319,7 +342,20 @@ public class AutonomousProfiles {
             }
         ));
                
-        
+        // Justin you stopped here
+
+        autoScore.put("RR",
+        new Profile(
+            new double[][] {
+                {autoScoreInitialX, autoScoreInitialY},
+                {118, 47},
+                {252, 47},
+                {autoScoreX, autoScoreY}
+            },
+            new double[] {
+                autoScoreHeading, autoScoreHeading, autoScoreHeading   
+            }
+        ));
     }
     
 }
