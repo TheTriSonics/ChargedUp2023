@@ -95,34 +95,7 @@ public class PoseEstimate extends SubsystemBase {
         }
       }
     }
-      /*
-      lastTimeStamp = timeStamp;
-      if (aprilTagSeen == false) {
-        goodTag = true;
-        aprilTagSeen = true;
-        // RobotContainer.gyro.setInitialHeading(llPose.getRotation().getDegrees());
-        poseEstimator.resetPosition(RobotContainer.gyro.getRotation2d(),
-            RobotContainer.swerveDrive.getModulePositions(), llPose);
-
-      } else {
-        double deltaX = llPose.getX() - pose.getX();
-        double deltaY = llPose.getY() - pose.getY();
-        double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        double velocity = distance / 0.02;
-        //if (!(velocity > 0.5 * RobotData.maxSpeed)){
-        if (true){
-          double angularDistance = (pose.getRotation().getDegrees() - llPose.getRotation().getDegrees());
-          while (angularDistance > 180) angularDistance -= 360;
-          while (angularDistance < -180) angularDistance += 360;
-          double angularVelocity = Math.abs(angularDistance) / 0.02;
-          //if (!(angularVelocity > 0.5 * RobotData.maxAngularSpeed)) { 
-          if (true){
-            poseEstimator.addVisionMeasurement(llPose, RobotContainer.limelight.getLastTimeStamp());
-            goodTag = true;
-          }
-        }
-      }
-      */
+     
     
     usedLimeLight.append(goodTag);
     // poseEstimator.resetPosition(RobotContainer.gyro.getRotation2d(),

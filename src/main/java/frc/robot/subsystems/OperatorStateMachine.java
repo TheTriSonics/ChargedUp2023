@@ -55,6 +55,7 @@ public class OperatorStateMachine extends SubsystemBase {
     timer.reset();
     state = nextState[state];
     disabled = false;
+    System.out.println("State: " + state);
   }
 
   public void setScoringLevel(int scoringLevel) {

@@ -83,9 +83,9 @@ public class RobotContainer {
     //chooser.addOption("Loopy Path to Charge Station", new LoopyPathToChargeStation());
     chooser.addOption("Score Two Then Loopy To Ramp", new ScoreTwoThenLoopyToRamp());
     chooser.addOption("Pick One Game Piece", new PickOneGamePiece());
-    chooser.addOption("Score Two Then Center Ramp", new ScoreTwoThenRamp());
+    chooser.setDefaultOption("Score Two Then Center Ramp", new ScoreTwoThenRamp());
     chooser.addOption("Score Second To Third Gamepiece", new ScoreTwoGrabThird());
-    chooser.setDefaultOption("Drive Over ramp", new CenterLeaveCommunity());
+    chooser.addOption("Drive Over ramp", new CenterLeaveCommunity());
     
     //chooser.addOption("Score Two Game Pieces", new ScoreTwo());
     //chooser.addOption("Score Two Then Ramp", new ScoreTwoThenRamp());
@@ -151,7 +151,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     InitializedCommandGroup command = chooser.getSelected();
     command.initialization();
-    return new AutoPlaceGamePiece(false, 2);
+    return command;
   }
 
 }

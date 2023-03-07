@@ -4,8 +4,10 @@
 
 package frc.robot.commands.autonomous;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
+import frc.robot.commands.AdvanceState;
 import frc.robot.commands.DriveSwerveProfile;
 import frc.robot.commands.SetOdometry;
 import frc.robot.commands.Wait;
@@ -25,8 +27,12 @@ public class PickOneGamePiece extends InitializedCommandGroup {
     
     addCommands(
         new SetOdometry(odometry[0], odometry[1], odometry[2]),
-        new DriveSwerveProfile(AutonomousProfiles.driveToFirstGamePiece.get(matchData), 0.6), 
-        new Wait(1000),
+        new ParallelCommandGroup(
+          new DriveSwerveProfile(AutonomousProfiles.driveToFirstGamePiece.get(matchData), 0.6), 
+          new SequentialCommandGroup(new Wait(1500), new AdvanceState())
+        ),
+        new AdvanceState(),
+        new Wait(200),
         new DriveSwerveProfile(AutonomousProfiles.firstGamePieceToSecondPlacement.get(matchData), 0.6));
   }
 }

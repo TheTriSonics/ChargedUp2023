@@ -29,7 +29,7 @@ public class Limelight extends SubsystemBase implements Runnable{
   double[] retroTarget = null;
   /** Creates a new Limelight. */
   public Limelight() {
-    jsonDumpNetworkTableEntry = NetworkTableInstance.getDefault().getTable("limelight").getEntry("json");
+    jsonDumpNetworkTableEntry = NetworkTableInstance.getDefault().getTable("limelight-left").getEntry("json");
     thread = new Notifier(this);
     thread.startPeriodic(0.02);
   }
@@ -81,7 +81,7 @@ public class Limelight extends SubsystemBase implements Runnable{
   int requiredTimesSeen = 4;
 
   public void run() {
-    var limelight = NetworkTableInstance.getDefault().getTable("limelight");
+    var limelight = NetworkTableInstance.getDefault().getTable("limelight-left");
     double[] corners = limelight.getEntry("tcornxy").getDoubleArray(new double []{1234});
     if(corners.length < 8) {
       retroTarget = null;
@@ -91,7 +91,7 @@ public class Limelight extends SubsystemBase implements Runnable{
       retroTarget = new double[]{centerX, centerY};
     }
     
-    double[] newPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose")
+    double[] newPose = NetworkTableInstance.getDefault().getTable("limelight-left").getEntry("botpose")
         .getDoubleArray(new double[] { 1234 });
     if (newPose.length < 6 || (newPose[0] == 0.0 && newPose[1] == 0)) {
       pose = null;

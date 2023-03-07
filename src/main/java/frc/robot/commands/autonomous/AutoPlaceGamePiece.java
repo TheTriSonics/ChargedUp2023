@@ -30,7 +30,7 @@ public class AutoPlaceGamePiece extends CommandBase {
   public void initialize() {
     RobotContainer.operatorStateMachine.setGamePiece(cube);
     RobotContainer.operatorStateMachine.setScoringLevel(level);;
-    RobotContainer.operatorStateMachine.setState(OperatorStateMachine.PLACEGAMEPIECE);
+    RobotContainer.operatorStateMachine.setState(OperatorStateMachine.PREPAREPLACEMENT);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -41,7 +41,7 @@ public class AutoPlaceGamePiece extends CommandBase {
         if (RobotContainer.operatorStateMachine.readyToPlacePiece()) {
           state = PLACE;
           RobotContainer.operatorStateMachine.advanceState();
-          timer.reset();
+          timer.start();
         }
         break;
       }
@@ -65,7 +65,9 @@ public class AutoPlaceGamePiece extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    System.out.println("ended");
+  }
 
   // Returns true when the command should end.
   @Override
