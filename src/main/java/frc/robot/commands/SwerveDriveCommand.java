@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.RobotContainer;
@@ -65,6 +66,7 @@ public class SwerveDriveCommand extends CommandBase {
     double scale = -1;
     if (RobotContainer.swerveDrive.isFieldRelative())
       scale = 1;
+    SmartDashboard.putNumber("input", xInput);
     RobotContainer.swerveDrive.drive(scale * xSpeed, scale * ySpeed, rot);
   }
 

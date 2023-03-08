@@ -41,6 +41,7 @@ public class Pneumatics extends SubsystemBase {
   }
 
   public void setValve(int valve, boolean state) {
+    // if (valve == CLAMP) state = !state;
     valves[valve].set(state);
   }
 

@@ -18,11 +18,16 @@ public class DriveOnRamp extends CommandBase {
   boolean nearSide;
   Timer timer;
   double rollOffset = 0;
-
+  double maxSpeed = 0.3; // 0.25;
+  double rampDown = 6;
+  boolean driveWithDistance = true;
 
   public DriveOnRamp( boolean nearSide ) {
     if (nearSide) targetX = 177;
-    else targetX = 168;
+    else {
+      targetX = 187;
+      maxSpeed = 0.20;
+    }
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.swerveDrive);
     timer = new Timer();
@@ -33,11 +38,13 @@ public class DriveOnRamp extends CommandBase {
   public void initialize() {
     rollOffset = RobotContainer.gyro.getRoll();
     RobotContainer.swerveDrive.setFieldRelative(true);
-  
   }
 
-  double maxSpeed = 0.25;
-  double rampDown = 6;
+  public double normalizeAngle(double x) {
+    while (x > 180) x -= 360;
+    while (x < -180) x += 360;
+    return x;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -45,17 +52,26 @@ public class DriveOnRamp extends CommandBase {
     double roll = RobotContainer.gyro.getRoll() - rollOffset;
     Pose2d pose = RobotContainer.poseEstimator.getPose();
     deltaX = targetX - pose.getX();
+
+    double heading = pose.getRotation().getDegrees();
+    double angleError = normalizeAngle(-heading);
+    double angleError1 = normalizeAngle(180 - heading);
+    if (Math.abs(angleError1) < Math.abs(angleError)) angleError = angleError1;
+    double rotSpeed = angleError * RobotData.maxAngularSpeed / 180;
+
     if(deltaX > rampDown) {
-      RobotContainer.swerveDrive.drive(maxSpeed * RobotData.maxSpeed, 0, 0);
+      RobotContainer.swerveDrive.drive(maxSpeed * RobotData.maxSpeed, 0, rotSpeed);
       return;
     }
+      
     if (Math.abs(deltaX) <= 2) {
       timer.start();
     }
+      
     if(Math.abs(deltaX) <= rampDown) {
       double xSpeed = maxSpeed/rampDown * deltaX * RobotData.maxSpeed;
-      RobotContainer.swerveDrive.drive(xSpeed, 0, 0);
-      return;
+      RobotContainer.swerveDrive.drive(xSpeed, 0, rotSpeed);
+      return;      
     } 
    
     RobotContainer.swerveDrive.drive(-maxSpeed * RobotData.maxSpeed, 0, 0);

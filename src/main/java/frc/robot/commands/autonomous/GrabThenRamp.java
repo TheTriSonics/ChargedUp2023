@@ -4,15 +4,16 @@
 
 package frc.robot.commands.autonomous;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import frc.robot.RobotContainer;
 import frc.robot.commands.*;
-import frc.robot.commands.SetOdometry;
-import frc.robot.commands.Wait;
+import frc.robot.subsystems.OperatorStateMachine;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class GrabThenRamp extends SequentialCommandGroup {
+public class GrabThenRamp extends InitializedCommandGroup {
   /** Creates a new GrabThenRamp. */
   public GrabThenRamp() {
     double[][] waypoints = new double[][] {
@@ -34,13 +35,29 @@ public class GrabThenRamp extends SequentialCommandGroup {
     };
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(
-      new SetOdometry(250, 30, 180),
-      new DriveSwerveProfile(waypoints, headings, 0.25), 
-      new Wait(1000),
-      new DriveSwerveProfile(waypoints2, headings2, 0.20),
-      new DriveOnRamp(false)
-    );
 
+  }
+
+  public void initialization() {
+    String matchData = RobotContainer.getMatchData();
+    double[] odometry = AutonomousProfiles.initialOdometries.get(matchData);
+    
+    addCommands(
+      Commands.parallel(
+        new AutoPlaceGamePiece(false, OperatorStateMachine.HIGH), 
+        new SetOdometry(odometry[0], odometry[1], odometry[2])
+      ),
+      new ParallelCommandGroup(
+        new DriveSwerveProfile(AutonomousProfiles.driveToFirstGamePiece.get(matchData), 0.3),// 0.6), 
+        Commands.parallel(
+          Commands.sequence(new Wait(1500), new AdvanceState())),
+          new SetGamePiece(false),
+          new SetScoringLevel(OperatorStateMachine.HIGH)
+        ),
+        new AdvanceState(),
+        new Wait(200),
+        new DriveToPose(100, -60, 180, 0.45),
+        new DriveOnRamp(false)
+    );
   }
 }

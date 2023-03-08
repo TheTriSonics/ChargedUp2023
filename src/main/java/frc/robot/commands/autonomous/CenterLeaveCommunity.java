@@ -4,10 +4,13 @@
 
 package frc.robot.commands.autonomous;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
 import frc.robot.commands.DriveSwerveProfile;
+import frc.robot.commands.RotateToHeading;
 import frc.robot.commands.SetOdometry;
 import frc.robot.commands.Wait;
+import frc.robot.subsystems.OperatorStateMachine;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -19,12 +22,27 @@ public class CenterLeaveCommunity extends InitializedCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
   public void initialization() {
     String matchData = RobotContainer.getMatchData();
+    double[] odometry, target;
+    double targetHeading;
+    if (matchData.charAt(0) == "R".charAt(0)) {
+      odometry = new double[] {250, -60, 180};
+      target = new double[] {80, -60, 180};
+      targetHeading = 0;
+    } else {
+      odometry = new double[] {-250, -60, 0};
+      target = new double[] {-80, -60, 0};
+      targetHeading = 180;
+    }
+
     addCommands(
-      new SetOdometry(250, -32, 180),
-      new DriveSwerveProfile(AutonomousProfiles.centerLeaveCommunityGetPiece.get(matchData), 0.25),
-      new Wait(1000),
-      new DriveSwerveProfile(AutonomousProfiles.centerLeaveCommunityToRamp.get(matchData), 0.25),
-      new DriveOnRamp(false)
+      Commands.parallel(
+        new AutoPlaceGamePiece(true, OperatorStateMachine.HIGH), 
+        new SetOdometry(odometry[0], odometry[1], odometry[2])
+      ),
+      new DriveToPose(target[0], target[1], target[2], 0.3),
+      new RotateToHeading(targetHeading),
+      new DriveOnRamp(true)
     );
+    
   }
 }
