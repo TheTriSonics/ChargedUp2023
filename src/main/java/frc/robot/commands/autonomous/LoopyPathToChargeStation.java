@@ -9,6 +9,7 @@ import frc.robot.RobotContainer;
 import frc.robot.commands.DriveSwerveProfile;
 import frc.robot.commands.SetOdometry;
 import frc.robot.subsystems.OperatorStateMachine;
+import frc.robot.utilities.state.ScoringState;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -46,7 +47,7 @@ public class LoopyPathToChargeStation extends InitializedCommandGroup {
     
     addCommands(
       Commands.parallel(
-        new AutoPlaceGamePiece(false, OperatorStateMachine.HIGH), 
+        new AutoPlaceGamePiece(false, ScoringState.HIGH), 
         new SetOdometry(odometry[0], odometry[1], odometry[2])
       ),
       new DriveSwerveProfile(AutonomousProfiles.loopyPath.get(matchData), 0.4),

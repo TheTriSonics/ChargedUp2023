@@ -6,11 +6,9 @@ package frc.robot.commands.autonomous;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
-import frc.robot.commands.DriveSwerveProfile;
 import frc.robot.commands.RotateToHeading;
 import frc.robot.commands.SetOdometry;
-import frc.robot.commands.Wait;
-import frc.robot.subsystems.OperatorStateMachine;
+import frc.robot.utilities.state.ScoringState;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -36,7 +34,7 @@ public class CenterLeaveCommunity extends InitializedCommandGroup {
 
     addCommands(
       Commands.parallel(
-        new AutoPlaceGamePiece(true, OperatorStateMachine.HIGH), 
+        new AutoPlaceGamePiece(true, ScoringState.HIGH), 
         new SetOdometry(odometry[0], odometry[1], odometry[2])
       ),
       new DriveToPose(target[0], target[1], target[2], 0.3),

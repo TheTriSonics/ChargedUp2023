@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.RobotContainer;
 import frc.robot.commands.*;
-import frc.robot.subsystems.OperatorStateMachine;
+import frc.robot.utilities.state.ScoringState;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -44,7 +44,7 @@ public class GrabThenRamp extends InitializedCommandGroup {
     
     addCommands(
       Commands.parallel(
-        new AutoPlaceGamePiece(false, OperatorStateMachine.HIGH), 
+        new AutoPlaceGamePiece(false, ScoringState.HIGH), 
         new SetOdometry(odometry[0], odometry[1], odometry[2])
       ),
       new ParallelCommandGroup(
@@ -52,7 +52,7 @@ public class GrabThenRamp extends InitializedCommandGroup {
         Commands.parallel(
           Commands.sequence(new Wait(1500), new AdvanceState())),
           new SetGamePiece(false),
-          new SetScoringLevel(OperatorStateMachine.HIGH)
+          new SetScoringLevel(ScoringState.HIGH)
         ),
         new AdvanceState(),
         new Wait(200),
