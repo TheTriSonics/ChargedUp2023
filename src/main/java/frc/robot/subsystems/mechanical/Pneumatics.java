@@ -47,4 +47,8 @@ public class Pneumatics extends SubsystemBase {
   public boolean getFlipperOut() {
     return m_flipperSolenoid.get();
   }
+
+  public boolean getIntakeOut() {
+    return m_intakeSolenoid.get();
+  }
 }

@@ -55,7 +55,12 @@ public class OperatorStateMachine extends SubsystemBase {
     timer.reset();
     state = nextState[state];
     disabled = false;
-    System.out.println("State: " + state);
+  }
+
+  public void goHome() {
+    state = REST;
+    disabled = false;
+    timer.reset();
   }
 
   public void setScoringLevel(int scoringLevel) {

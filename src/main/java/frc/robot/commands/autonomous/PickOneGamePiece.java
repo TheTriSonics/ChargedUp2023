@@ -4,13 +4,18 @@
 
 package frc.robot.commands.autonomous;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
 import frc.robot.commands.AdvanceState;
 import frc.robot.commands.DriveSwerveProfile;
+import frc.robot.commands.InScoringPosition;
+import frc.robot.commands.SetGamePiece;
 import frc.robot.commands.SetOdometry;
+import frc.robot.commands.SetScoringLevel;
 import frc.robot.commands.Wait;
+import frc.robot.subsystems.OperatorStateMachine;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -26,13 +31,28 @@ public class PickOneGamePiece extends InitializedCommandGroup {
     double[] odometry = AutonomousProfiles.initialOdometries.get(matchData);
     
     addCommands(
-        new SetOdometry(odometry[0], odometry[1], odometry[2]),
-        new ParallelCommandGroup(
-          new DriveSwerveProfile(AutonomousProfiles.driveToFirstGamePiece.get(matchData), 0.6), 
-          new SequentialCommandGroup(new Wait(1500), new AdvanceState())
+      Commands.parallel(
+        new AutoPlaceGamePiece(false, OperatorStateMachine.HIGH), 
+        new SetOdometry(odometry[0], odometry[1], odometry[2])
+      ),
+      new ParallelCommandGroup(
+        new DriveSwerveProfile(AutonomousProfiles.driveToFirstGamePiece.get(matchData), 0.3),// 0.6), 
+        Commands.parallel(
+          Commands.sequence(new Wait(1500), new AdvanceState())),
+          new SetGamePiece(true),
+          new SetScoringLevel(OperatorStateMachine.HIGH)
         ),
         new AdvanceState(),
         new Wait(200),
-        new DriveSwerveProfile(AutonomousProfiles.firstGamePieceToSecondPlacement.get(matchData), 0.6));
+        new DriveSwerveProfile(AutonomousProfiles.firstGamePieceToSecondPlacement.get(matchData), 0.3), //0.6));
+        Commands.parallel(
+          new AdvanceState(),
+          new InScoringPosition()
+        ),
+        new AdvanceState(),
+        new Wait(300),
+        new AdvanceState(),
+        new Wait(1000)
+    );
   }
 }

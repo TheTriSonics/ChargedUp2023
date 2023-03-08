@@ -61,7 +61,7 @@ public class AutonomousProfiles {
                     {250.0, 40.4},
                     {191.3, 29.7},
                     {129.9, 29.7},
-                    {64.2, 24.7}
+                    {64.2, 18.7}
             }, 
                 new double[] {
                     180, 20, 0
@@ -107,10 +107,10 @@ public class AutonomousProfiles {
         firstGamePieceToSecondPlacement.put("RR", 
             new Profile(
                 new double[][] {
-                    {64.9, 25.4},
-                    {129.9, 32.5},
-                    {191.3, 28.3},
-                    {250.2, 19.0} 
+                    {64.2, 18.7}, //{64.9, 25.4},
+                    {129.9, 28.5}, // 32.5},
+                    {191.3, 25.3}, // 28.3},
+                    {247.2, 19.0} 
             }, 
                 new double[] {
                     160, 180, 180

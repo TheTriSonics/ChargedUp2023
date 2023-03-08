@@ -33,6 +33,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    /* 
     double power = 0;
     if (RobotContainer.operator.getHID().getLeftTriggerAxis() >= 0.5) {
       power = 0.5;
@@ -43,9 +44,11 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     setPower(power);
+    */
   }
   
   public void setPower(double power) {
+    if (RobotContainer.pneumatics.getIntakeOut() == false) power = 0;
     m_leftIntakeMotor.set(power);
     m_rightIntakeMotor.set(-power);
   }

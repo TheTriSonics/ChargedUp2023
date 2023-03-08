@@ -4,15 +4,11 @@
 
 package frc.robot.subsystems.mechanical;
 
-import org.ejml.data.DMatrixRMaj;
-
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
@@ -23,6 +19,7 @@ public class HorizontalLiftSubsystem extends SubsystemBase {
   public static final int MID = 1;
   public static final int HIGH = 2;
   public static final int TRAVELING = 3;
+  public static final double MAX_HORIZONTAL_IN_INCHES = 43.5;
   double[] cubeSetPoints = new double[] {
     0, 20, 36, 0
   };
@@ -66,7 +63,15 @@ public class HorizontalLiftSubsystem extends SubsystemBase {
   }
 
   public void setPower(double power) {
-    // TODO: need to limit based on encoder counts
+    double origPower = power;
+    if (power > 0 && getPosition() >  MAX_HORIZONTAL_IN_INCHES) {
+      power = 0;
+    }
+    else if (power < 0 && getPosition() < 0.1) {
+      power = 0;
+    }
+    SmartDashboard.putNumber("Orig Power", origPower);
+    SmartDashboard.putNumber("Final Power", power);
     m_slideMotor.set(TalonFXControlMode.PercentOutput, power);
   }
 

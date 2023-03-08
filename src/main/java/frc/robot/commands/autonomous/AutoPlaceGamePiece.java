@@ -54,7 +54,7 @@ public class AutoPlaceGamePiece extends CommandBase {
         break;
       }
       case(END): {
-        if (timer.hasElapsed(0.5)) {
+        if (level == OperatorStateMachine.LOW || timer.hasElapsed(1.5)) {
           finished = true;
         }
         break;

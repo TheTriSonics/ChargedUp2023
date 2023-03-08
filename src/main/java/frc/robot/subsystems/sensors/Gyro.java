@@ -68,5 +68,6 @@ public class Gyro extends SubsystemBase {
     // This method will be called once per scheduler run
     // System.out.println(gyro.getRotation2d());
     SmartDashboard.putNumber("Yaw", getRotation2d().getDegrees());
+    SmartDashboard.putNumber("Roll", gyro.getRoll());
   }
 }

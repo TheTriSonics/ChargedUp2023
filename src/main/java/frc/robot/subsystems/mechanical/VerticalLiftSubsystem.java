@@ -21,6 +21,7 @@ public class VerticalLiftSubsystem extends SubsystemBase {
   public static final int MID = 1;
   public static final int HIGH = 2;
   public static final int TRAVELING = 3;
+  public static final double MAX_VERTICAL_IN_INCHES = 48.00;
   static final double INCHESPERPULSE = 49.25 / 107638;
   double[] cubeSetPoints = new double[] {
     0, 23.8, 36, 5
@@ -38,6 +39,7 @@ public class VerticalLiftSubsystem extends SubsystemBase {
       this.counts = counts;
     }
   }
+  
   private final int MAX_LIFT_ENCODER_TICKS = 4023;
   private final int MIN_LIFT_ENCODER_TICKS = 0; 
   
@@ -88,7 +90,13 @@ public class VerticalLiftSubsystem extends SubsystemBase {
     m_leftLiftMotor.setSelectedSensorPosition(0);
   }
 
-  public void setPower(double power){
+  public void setPower(double power) {
+    if (power > 0 && getPosition() >  MAX_VERTICAL_IN_INCHES) {
+      power = 0;
+    }
+    else if (power < 0 && getPosition() < 0.1) {
+      power = 0;
+    }
     if (getPosition() < 15 && RobotContainer.pneumatics.getFlipperOut() && power < 0) power = 0;
     m_leftLiftMotor.set(TalonFXControlMode.PercentOutput, power * 0.4);
   }

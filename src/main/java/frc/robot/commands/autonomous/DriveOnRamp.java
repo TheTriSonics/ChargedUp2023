@@ -17,10 +17,11 @@ public class DriveOnRamp extends CommandBase {
   double deltaX = 100;
   boolean nearSide;
   Timer timer;
+  double rollOffset = 0;
 
 
   public DriveOnRamp( boolean nearSide ) {
-    if (nearSide) targetX = 171;
+    if (nearSide) targetX = 177;
     else targetX = 168;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.swerveDrive);
@@ -30,16 +31,18 @@ public class DriveOnRamp extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    rollOffset = RobotContainer.gyro.getRoll();
     RobotContainer.swerveDrive.setFieldRelative(true);
   
   }
 
-  double maxSpeed = 0.3;
+  double maxSpeed = 0.25;
   double rampDown = 6;
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double roll = RobotContainer.gyro.getRoll() - rollOffset;
     Pose2d pose = RobotContainer.poseEstimator.getPose();
     deltaX = targetX - pose.getX();
     if(deltaX > rampDown) {
@@ -48,8 +51,6 @@ public class DriveOnRamp extends CommandBase {
     }
     if (Math.abs(deltaX) <= 2) {
       timer.start();
-     // rampDown = 4;
-     // maxSpeed = 0.4;
     }
     if(Math.abs(deltaX) <= rampDown) {
       double xSpeed = maxSpeed/rampDown * deltaX * RobotData.maxSpeed;

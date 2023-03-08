@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AdvanceState;
+import frc.robot.commands.GoHome;
 import frc.robot.commands.SetFieldRelative;
 import frc.robot.commands.SetGamePiece;
 import frc.robot.commands.SetScoringLevel;
@@ -95,8 +96,8 @@ public class RobotContainer {
     allianceChooser.setDefaultOption("Red", "R");
     allianceChooser.addOption("Blue", "B");
     SmartDashboard.putData("Alliance Chooser", allianceChooser);
-    positionChooser.setDefaultOption("Left", "L");
-    positionChooser.addOption("Right", "R");
+    positionChooser.addOption("Left", "L");
+    positionChooser.setDefaultOption("Right", "R");
     SmartDashboard.putData("Position Chooser", positionChooser);
 
     horizontalLiftSubsystem.resetPosition();
@@ -136,6 +137,7 @@ public class RobotContainer {
 
     
     operator.rightBumper().onTrue(new AdvanceState());
+    operator.leftBumper().onTrue(new GoHome());
     operator.leftTrigger(0.5).onTrue(new SetGamePiece(true));
     operator.rightTrigger(0.5).onTrue(new SetGamePiece(false));
     operator.a().onTrue(new SetScoringLevel(OperatorStateMachine.LOW));
@@ -152,6 +154,7 @@ public class RobotContainer {
     InitializedCommandGroup command = chooser.getSelected();
     command.initialization();
     return command;
+    // return new AutoPlaceGamePiece(false, OperatorStateMachine.HIGH);
   }
 
 }
