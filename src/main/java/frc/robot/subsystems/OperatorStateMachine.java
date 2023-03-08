@@ -95,13 +95,22 @@ public class OperatorStateMachine extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (disabled)
+    if (disabled) {
       return;
+    }
+
     double time = timer.get();
     Delays delays = stateDelays[state.stateId];
     SmartDashboard.putNumber("State", state.stateId);
     SmartDashboard.putBoolean("Cube", cube);
     SmartDashboard.putNumber("Scoring Level", level.stateId);
+
+    // If total time for everything to be activated has been reached, don't set
+    // anything again.
+    if (time > delays.getMaxTime()) {
+      return;
+    }
+
     switch (state) {
       case REST: {
         if (time >= delays.hLiftDelay)
@@ -186,6 +195,18 @@ public class OperatorStateMachine extends SubsystemBase {
       this.clampDelay = clampDelay;
       this.flipperDelay = flipperDelay;
       this.intakeDelay = intakeDelay;
+    }
+
+    public double getMaxTime() {
+      double[] delays = new double[] { this.hLiftDelay, this.vLiftDelay, this.wheelDelay, this.clampDelay,
+          this.flipperDelay, this.intakeDelay };
+      double max = delays[0];
+      for (int i = 0; i < delays.length; i++) {
+        if (delays[i] > max) {
+          max = delays[i];
+        }
+      }
+      return max;
     }
 
   }

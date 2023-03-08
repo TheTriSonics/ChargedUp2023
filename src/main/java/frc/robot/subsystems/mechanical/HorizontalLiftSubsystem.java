@@ -61,14 +61,11 @@ public class HorizontalLiftSubsystem extends SubsystemBase {
   }
 
   public void setPower(double power) {
-    double origPower = power;
     if (power > 0 && getPosition() > MAX_HORIZONTAL_IN_INCHES) {
       power = 0;
     } else if (power < 0 && getPosition() < 0.1) {
       power = 0;
     }
-    SmartDashboard.putNumber("Orig Power", origPower);
-    SmartDashboard.putNumber("Final Power", power);
     m_slideMotor.set(TalonFXControlMode.PercentOutput, power);
   }
 
