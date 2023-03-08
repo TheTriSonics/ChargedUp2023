@@ -7,19 +7,20 @@ package frc.robot.commands.autonomous;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.OperatorStateMachine;
+import frc.robot.utilities.state.OperatorState;
+import frc.robot.utilities.state.ScoringState;
 
 public class AutoPlaceGamePiece extends CommandBase {
   /** Creates a new AutoPlaceGamePiece. */
   Timer timer = new Timer();
   boolean cube;
-  int level;
+  ScoringState level;
   final int RAISE = 0;
   final int PLACE = 1;
   final int END = 2;
   int state = RAISE;
   boolean finished = false;
-  public AutoPlaceGamePiece(boolean cube, int level) {
+  public AutoPlaceGamePiece(boolean cube, ScoringState level) {
     this.cube = cube;
     this.level = level;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -30,7 +31,7 @@ public class AutoPlaceGamePiece extends CommandBase {
   public void initialize() {
     RobotContainer.operatorStateMachine.setGamePiece(cube);
     RobotContainer.operatorStateMachine.setScoringLevel(level);;
-    RobotContainer.operatorStateMachine.setState(OperatorStateMachine.PREPAREPLACEMENT);
+    RobotContainer.operatorStateMachine.setState(OperatorState.GAME_PIECE_PREP);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -54,7 +55,7 @@ public class AutoPlaceGamePiece extends CommandBase {
         break;
       }
       case(END): {
-        if (level == OperatorStateMachine.LOW || timer.hasElapsed(1.5)) {
+        if (level == ScoringState.LOW || timer.hasElapsed(1.5)) {
           finished = true;
         }
         break;

@@ -16,17 +16,11 @@ import frc.robot.commands.SetFieldRelative;
 import frc.robot.commands.SetGamePiece;
 import frc.robot.commands.SetScoringLevel;
 import frc.robot.commands.SwerveDriveCommand;
-import frc.robot.commands.autonomous.AutoPlaceGamePiece;
 import frc.robot.commands.autonomous.AutoScore;
 import frc.robot.commands.autonomous.AutonomousProfiles;
-import frc.robot.commands.autonomous.CenterDriveUpRamp;
 import frc.robot.commands.autonomous.CenterLeaveCommunity;
-import frc.robot.commands.autonomous.DriveOnRamp;
-import frc.robot.commands.autonomous.GrabThenRamp;
 import frc.robot.commands.autonomous.InitializedCommandGroup;
-import frc.robot.commands.autonomous.LoopyPathToChargeStation;
 import frc.robot.commands.autonomous.PickOneGamePiece;
-import frc.robot.commands.autonomous.ScoreTwo;
 import frc.robot.commands.autonomous.ScoreTwoGrabThird;
 import frc.robot.commands.autonomous.ScoreTwoThenLoopyToRamp;
 import frc.robot.commands.autonomous.ScoreTwoThenRamp;
@@ -37,6 +31,7 @@ import frc.robot.subsystems.mechanical.HorizontalLiftSubsystem;
 import frc.robot.subsystems.mechanical.*;
 import frc.robot.subsystems.sensors.Gyro;
 import frc.robot.subsystems.sensors.Limelight;
+import frc.robot.utilities.state.ScoringState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -140,9 +135,9 @@ public class RobotContainer {
     operator.leftBumper().onTrue(new GoHome());
     operator.leftTrigger(0.5).onTrue(new SetGamePiece(true));
     operator.rightTrigger(0.5).onTrue(new SetGamePiece(false));
-    operator.a().onTrue(new SetScoringLevel(OperatorStateMachine.LOW));
-    operator.b().onTrue(new SetScoringLevel(OperatorStateMachine.MID));
-    operator.y().onTrue(new SetScoringLevel(OperatorStateMachine.HIGH));    
+    operator.a().onTrue(new SetScoringLevel(ScoringState.LOW));
+    operator.b().onTrue(new SetScoringLevel(ScoringState.MID));
+    operator.y().onTrue(new SetScoringLevel(ScoringState.HIGH));    
   }
 
   /**

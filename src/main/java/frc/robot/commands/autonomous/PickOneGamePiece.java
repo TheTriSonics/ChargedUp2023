@@ -6,7 +6,6 @@ package frc.robot.commands.autonomous;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
 import frc.robot.commands.AdvanceState;
 import frc.robot.commands.DriveSwerveProfile;
@@ -15,7 +14,7 @@ import frc.robot.commands.SetGamePiece;
 import frc.robot.commands.SetOdometry;
 import frc.robot.commands.SetScoringLevel;
 import frc.robot.commands.Wait;
-import frc.robot.subsystems.OperatorStateMachine;
+import frc.robot.utilities.state.ScoringState;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -32,7 +31,7 @@ public class PickOneGamePiece extends InitializedCommandGroup {
     
     addCommands(
       Commands.parallel(
-        new AutoPlaceGamePiece(false, OperatorStateMachine.HIGH), 
+        new AutoPlaceGamePiece(false, ScoringState.HIGH), 
         new SetOdometry(odometry[0], odometry[1], odometry[2])
       ),
       new ParallelCommandGroup(
@@ -40,7 +39,7 @@ public class PickOneGamePiece extends InitializedCommandGroup {
         Commands.parallel(
           Commands.sequence(new Wait(1500), new AdvanceState())),
           new SetGamePiece(true),
-          new SetScoringLevel(OperatorStateMachine.HIGH)
+          new SetScoringLevel(ScoringState.HIGH)
         ),
         new AdvanceState(),
         new Wait(200),

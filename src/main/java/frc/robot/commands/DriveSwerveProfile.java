@@ -7,8 +7,10 @@ package frc.robot.commands;
 import frc.robot.RobotContainer;
 import frc.robot.RobotData;
 import frc.robot.commands.autonomous.Profile;
-import frc.robot.utilities.*;
-
+import frc.robot.utilities.math.BezierCurve;
+import frc.robot.utilities.math.Math2d;
+import frc.robot.utilities.math.Point2d;
+import frc.robot.utilities.math.Spline;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
