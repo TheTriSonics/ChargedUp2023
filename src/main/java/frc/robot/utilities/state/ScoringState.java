@@ -1,7 +1,7 @@
 package frc.robot.utilities.state;
 
 public enum ScoringState {
-    FLOOR(0), LOW(1), MID(2), HIGH(3), TRAVELING(4);
+    LOW(0), MID(1), HIGH(2), TRAVELING(3);
 
     public final int stateId;
 
