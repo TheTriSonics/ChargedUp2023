@@ -4,22 +4,17 @@
 
 package frc.robot.commands.autonomous;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.RobotContainer;
 import frc.robot.commands.DriveSwerveProfile;
 import frc.robot.commands.SetOdometry;
+import frc.robot.subsystems.OperatorStateMachine;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class LoopyPathToChargeStation extends SequentialCommandGroup {
-  /*double[][] waypoints = new double[][] {
-      { 250.0, 30.0 },
-      { 150.0, 30.0 },
-      { 120.79310889625387, 18.953645546150465 }, // was 103
-      { 120.09483302485617, -45}, // was 103
-      { 114.51724723775244, -51}
-  }; 
-  */
+public class LoopyPathToChargeStation extends InitializedCommandGroup {
+  
   double[][] waypoints = new double[][] {
     {250.0, 30.0},
     {190.87931749063435, 30.397353902458427},
@@ -37,9 +32,25 @@ public class LoopyPathToChargeStation extends SequentialCommandGroup {
   public LoopyPathToChargeStation() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+    /* 
     addCommands(
         new SetOdometry(250, 30, 180),
         new DriveSwerveProfile(waypoints, headings, 0.3),
         new DriveOnRamp(false));
+    */
+  }
+
+  public void initialization() {
+    String matchData = RobotContainer.getMatchData();
+    double[] odometry = AutonomousProfiles.initialOdometries.get(matchData);
+    
+    addCommands(
+      Commands.parallel(
+        new AutoPlaceGamePiece(false, OperatorStateMachine.HIGH), 
+        new SetOdometry(odometry[0], odometry[1], odometry[2])
+      ),
+      new DriveSwerveProfile(AutonomousProfiles.loopyPath.get(matchData), 0.4),
+      new DriveOnRamp(true)
+    );
   }
 }

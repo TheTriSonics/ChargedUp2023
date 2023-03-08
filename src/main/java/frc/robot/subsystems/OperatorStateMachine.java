@@ -28,7 +28,7 @@ public class OperatorStateMachine extends SubsystemBase {
 
   // hLiftDelay, vLiftDelay, wheelDelay, clampDelay, flipperDelay, intakeDelay;
   Delays gamePiecePrepDelay = new Delays(0, 0, 0, 0.3, 0.3, 0);
-  Delays engageGamePieceDelay = new Delays(0.3, 0.1, 0.1, 0, 0, 0.2);
+  Delays engageGamePieceDelay = new Delays(0.3, 0.1, 0.5, 0, 0, 0.2);
   Delays preparePlacementDelay = new Delays(0.5, 0, 0, 0, 0, 0);
   Delays placeGamePieceDelay = new Delays(0, 0, 0, 0, 0, 0);
   Delays restDelay = new Delays(0, 0.5, 0, 0, 0, 0.5);

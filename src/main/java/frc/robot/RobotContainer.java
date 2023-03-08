@@ -77,11 +77,14 @@ public class RobotContainer {
     new AutonomousProfiles();
     //chooser.addOption("Grab Then Ramp", new GrabThenRamp());
     //chooser.addOption("Loopy Path to Charge Station", new LoopyPathToChargeStation());
+    chooser.addOption("Just Loopy Path", new LoopyPathToChargeStation());
     chooser.addOption("Score Two Then Loopy To Ramp", new ScoreTwoThenLoopyToRamp());
-    chooser.addOption("Pick One Game Piece", new PickOneGamePiece());
-    chooser.setDefaultOption("Score Two Then Center Ramp", new ScoreTwoThenRamp());
+    chooser.addOption("Score, Pick one, Ramp", new GrabThenRamp());
+    chooser.addOption("Score Two Then Center Ramp", new ScoreTwoThenRamp());
     chooser.addOption("Score Second To Third Gamepiece", new ScoreTwoGrabThird());
     chooser.addOption("Drive Over ramp", new CenterLeaveCommunity());
+    chooser.addOption("Center, then ramp", new CenterDriveUpRamp());
+    //chooser.setDefaultOption("Center, drive over ramp", new CenterLeaveCommunity());
     
     //chooser.addOption("Score Two Game Pieces", new ScoreTwo());
     //chooser.addOption("Score Two Then Ramp", new ScoreTwoThenRamp());
@@ -148,6 +151,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     InitializedCommandGroup command = chooser.getSelected();
     command.initialization();
+    System.out.println(command);
     return command;
     // return new AutoPlaceGamePiece(false, OperatorStateMachine.HIGH);
   }
