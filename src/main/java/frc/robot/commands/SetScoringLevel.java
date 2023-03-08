@@ -6,19 +6,20 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
+import frc.robot.utilities.state.ScoringState;
 
 public class SetScoringLevel extends CommandBase {
   /** Creates a new SetScoringLevel. */
-  int scoringLevel;
-  public SetScoringLevel(int scoringLevel) {
-    this.scoringLevel = scoringLevel;
+  ScoringState level;
+  public SetScoringLevel(ScoringState level) {
+    this.level = level;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.operatorStateMachine.setScoringLevel(scoringLevel);
+    RobotContainer.operatorStateMachine.setScoringLevel(level);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

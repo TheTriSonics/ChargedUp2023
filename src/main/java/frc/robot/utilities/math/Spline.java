@@ -1,4 +1,4 @@
-package frc.robot.utilities;
+package frc.robot.utilities.math;
 
 public class Spline {
     double[][] K;
