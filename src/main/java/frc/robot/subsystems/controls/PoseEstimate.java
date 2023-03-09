@@ -22,24 +22,25 @@ public class PoseEstimate extends SubsystemBase {
   DoubleLogEntry llPoseX, llPoseY, llPoseHeading;
   DoubleLogEntry poseX, poseY, poseHeading;
   BooleanLogEntry usedLimeLight;
+
   /** Creates a new PoseEstimate. */
   public PoseEstimate() {
-    llPoseX = new DoubleLogEntry(RobotContainer.dataLog, "llPose X");
-    llPoseY = new DoubleLogEntry(RobotContainer.dataLog, "llPose Y");
-    llPoseHeading = new DoubleLogEntry(RobotContainer.dataLog, "llPose heading");
-    poseX = new DoubleLogEntry(RobotContainer.dataLog, "pose X");
-    poseY = new DoubleLogEntry(RobotContainer.dataLog, "pose Y");
-    poseHeading = new DoubleLogEntry(RobotContainer.dataLog, "pose heading");
-    usedLimeLight = new BooleanLogEntry(RobotContainer.dataLog, "used Lime Light");
+    // llPoseX = new DoubleLogEntry(RobotContainer.dataLog, "llPose X");
+    // llPoseY = new DoubleLogEntry(RobotContainer.dataLog, "llPose Y");
+    // llPoseHeading = new DoubleLogEntry(RobotContainer.dataLog, "llPose heading");
+    // poseX = new DoubleLogEntry(RobotContainer.dataLog, "pose X");
+    // poseY = new DoubleLogEntry(RobotContainer.dataLog, "pose Y");
+    // poseHeading = new DoubleLogEntry(RobotContainer.dataLog, "pose heading");
+    // usedLimeLight = new BooleanLogEntry(RobotContainer.dataLog, "used Lime Light");
     poseEstimator = new SwerveDrivePoseEstimator(
         RobotContainer.swerveDrive.getKinematics(),
         RobotContainer.gyro.getRotation2d(),
         RobotContainer.swerveDrive.getModulePositions(),
         new Pose2d(),
-        VecBuilder.fill(2,2, Units.degreesToRadians(2)),
+        VecBuilder.fill(2, 2, Units.degreesToRadians(2)),
         VecBuilder.fill(36, 36, Units.degreesToRadians(30))
-        // VecBuilder.fill(10, 20, Units.degreesToRadians(30))
-        );
+    // VecBuilder.fill(10, 20, Units.degreesToRadians(30))
+    );
   }
 
   public Pose2d getPose() {
@@ -60,19 +61,39 @@ public class PoseEstimate extends SubsystemBase {
     // This method will be called once per scheduler run
     poseEstimator.update(RobotContainer.gyro.getRotation2d(), RobotContainer.swerveDrive.getModulePositions());
     Pose2d pose = getPose();
-    Pose2d llPose = RobotContainer.limelight.getPose();
-    poseX.append(pose.getX());
-    poseY.append(pose.getY());
-    poseHeading.append(pose.getRotation().getDegrees());
-    if (llPose != null){
-      llPoseX.append(llPose.getX());
-      llPoseY.append(llPose.getY());
-      llPoseHeading.append(llPose.getRotation().getDegrees());
-    }else {
-      llPoseX.append(Double.NaN);
-      llPoseY.append(Double.NaN);
-      llPoseHeading.append(Double.NaN);
+    double heading = pose.getRotation().getDegrees();
+    while (heading > 180) heading -= 360;
+    while (heading < -180) heading += 360;
+    Pose2d llPose;
+    boolean backCamera = false;
+    if (RobotContainer.isAllianceRed()) {
+      if (Math.abs(heading) < 90){
+        llPose = RobotContainer.backLimelight.getPose();
+        backCamera = true;
+      }
+      else
+        llPose = RobotContainer.limelight.getPose();
+    } else {
+      if (Math.abs(heading) < 90)
+        llPose = RobotContainer.limelight.getPose();
+      else{
+        llPose = RobotContainer.backLimelight.getPose();
+        backCamera = true;
+      }  
     }
+    SmartDashboard.putBoolean("backCamera", backCamera);
+    // poseX.append(pose.getX());
+    // poseY.append(pose.getY());
+    // poseHeading.append(pose.getRotation().getDegrees());
+    // if (llPose != null) {
+    //   llPoseX.append(llPose.getX());
+    //   llPoseY.append(llPose.getY());
+    //   llPoseHeading.append(llPose.getRotation().getDegrees());
+    // } else {
+    //   llPoseX.append(Double.NaN);
+    //   llPoseY.append(Double.NaN);
+    //   llPoseHeading.append(Double.NaN);
+    // }
     double timeStamp = RobotContainer.limelight.getTimeStamp();
     boolean goodTag = false;
     if (llPose != null && timeStamp != lastTimeStamp) {
@@ -84,20 +105,19 @@ public class PoseEstimate extends SubsystemBase {
             RobotContainer.swerveDrive.getModulePositions(), llPose);
 
       } else {
-      //goodTag = true;
+        // goodTag = true;
         double deltaX = llPose.getX() - pose.getX();
         double deltaY = llPose.getY() - pose.getY();
         double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
         if (distance < 40) { // && llPose.getX() > 160) {
           goodTag = true;
-          llPose = new Pose2d(llPose.getX(),llPose.getY(), pose.getRotation());
+          llPose = new Pose2d(llPose.getX(), llPose.getY(), pose.getRotation());
           poseEstimator.addVisionMeasurement(llPose, RobotContainer.limelight.getLastTimeStamp());
         }
       }
     }
-     
-    
-    usedLimeLight.append(goodTag);
+
+    //usedLimeLight.append(goodTag);
     // poseEstimator.resetPosition(RobotContainer.gyro.getRotation2d(),
     // RobotContainer.swerveDrive.getModulePositions(), pose);
 

@@ -56,7 +56,7 @@ public class GrabThenRamp extends InitializedCommandGroup {
         ),
         new AdvanceState(),
         new Wait(200),
-        new DriveToPose(100, -60, 180, 0.45),
+        new DriveToPose(120, -60, 0, 0.50),
         new DriveOnRamp(false)
     );
   }

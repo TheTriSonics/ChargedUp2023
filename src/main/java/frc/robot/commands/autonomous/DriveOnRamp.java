@@ -25,8 +25,7 @@ public class DriveOnRamp extends CommandBase {
   public DriveOnRamp( boolean nearSide ) {
     if (nearSide) targetX = 177;
     else {
-      targetX = 187;
-      maxSpeed = 0.20;
+      targetX = 175;
     }
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.swerveDrive);

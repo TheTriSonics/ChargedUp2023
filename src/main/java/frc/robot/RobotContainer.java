@@ -35,6 +35,7 @@ import frc.robot.subsystems.OperatorStateMachine;
 import frc.robot.subsystems.controls.PoseEstimate;
 import frc.robot.subsystems.mechanical.HorizontalLiftSubsystem;
 import frc.robot.subsystems.mechanical.*;
+import frc.robot.subsystems.sensors.BackLimelight;
 import frc.robot.subsystems.sensors.Gyro;
 import frc.robot.subsystems.sensors.Limelight;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -55,6 +56,7 @@ public class RobotContainer {
   public static Gyro gyro = new Gyro();
   public static SwerveDriveTrain swerveDrive = new SwerveDriveTrain();
   public static Limelight limelight = new Limelight();
+  public static BackLimelight backLimelight = new BackLimelight();
   public static PoseEstimate poseEstimator;
   public static HorizontalLiftSubsystem horizontalLiftSubsystem = new HorizontalLiftSubsystem();
   public static VerticalLiftSubsystem verticalLiftSubsystem = new VerticalLiftSubsystem();
@@ -109,8 +111,8 @@ public class RobotContainer {
   public void stopLogger(){
   }
   public void startLogger() {
-    DataLogManager.start();
-    dataLog = DataLogManager.getLog();
+    //DataLogManager.start();
+    //dataLog = DataLogManager.getLog();
   }
   public void update(){
     String allianceChoice = allianceChooser.getSelected();
@@ -121,6 +123,9 @@ public class RobotContainer {
 
   public static String getMatchData() {
     return alliance + position;
+  }
+  public static boolean isAllianceRed(){
+    return alliance == "R";
   }
 
   /**
