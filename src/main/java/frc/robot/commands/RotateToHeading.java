@@ -12,6 +12,7 @@ public class RotateToHeading extends CommandBase {
   /** Creates a new RotateToHeading. */
   double target;
   double angleError;
+  
   public RotateToHeading(double heading) {
     target = heading;
     addRequirements(RobotContainer.swerveDrive);
@@ -31,7 +32,7 @@ public class RotateToHeading extends CommandBase {
     angleError = target - heading;
     while (angleError > 180) angleError -= 360;
     while (angleError < -180) angleError += 360;
-    double rotSpeed = angleError / 120 * RobotData.maxAngularSpeed;
+    double rotSpeed = angleError / 90 * RobotData.maxAngularSpeed;
     RobotContainer.swerveDrive.drive(0, 0, rotSpeed);
 
   }

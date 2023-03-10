@@ -21,13 +21,14 @@ public class VerticalLiftSubsystem extends SubsystemBase {
   public static final int MID = 1;
   public static final int HIGH = 2;
   public static final int TRAVELING = 3;
+  public static final int REST = 4;
   public static final double MAX_VERTICAL_IN_INCHES = 48.00;
   static final double INCHESPERPULSE = 49.25 / 107638;
   double[] cubeSetPoints = new double[] {
-    0, 23.8, 36, 5
+    12, 23.8, 36, 5, 0
   };
   double[] coneSetPoints = new double[] {
-    0, 38, 49.5, 5
+    12, 38, 49.5, 5, 0
   };
   double[] setPoints = cubeSetPoints;
   

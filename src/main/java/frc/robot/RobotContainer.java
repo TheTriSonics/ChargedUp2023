@@ -28,6 +28,7 @@ import frc.robot.commands.autonomous.LoopyPathToChargeStation;
 import frc.robot.commands.autonomous.PickOneGamePiece;
 import frc.robot.commands.autonomous.ScoreTwo;
 import frc.robot.commands.autonomous.ScoreTwoGrabThird;
+import frc.robot.commands.autonomous.ScoreTwoLowThenRamp;
 import frc.robot.commands.autonomous.ScoreTwoThenLoopyToRamp;
 import frc.robot.commands.autonomous.ScoreTwoThenRamp;
 import frc.robot.commands.autonomous.StrafeToVisionTarget;
@@ -82,38 +83,36 @@ public class RobotContainer {
     startLogger();
     poseEstimator = new PoseEstimate();
     new AutonomousProfiles();
-    //chooser.addOption("Grab Then Ramp", new GrabThenRamp());
-    //chooser.addOption("Loopy Path to Charge Station", new LoopyPathToChargeStation());
+
     chooser.addOption("Just Loopy Path", new LoopyPathToChargeStation());
-    chooser.addOption("Score Two Then Loopy To Ramp", new ScoreTwoThenLoopyToRamp());
+    chooser.addOption("Score Two", new ScoreTwoThenRamp());
     chooser.addOption("Score, Pick one, Ramp", new GrabThenRamp());
-    chooser.addOption("Score Two Then Center Ramp", new ScoreTwoThenRamp());
+    chooser.setDefaultOption("Score Two Then Center Ramp", new ScoreTwoLowThenRamp());
     chooser.addOption("Score Second To Third Gamepiece", new ScoreTwoGrabThird());
     chooser.addOption("Drive Over ramp", new CenterLeaveCommunity());
     chooser.addOption("Center, then ramp", new CenterDriveUpRamp());
-    //chooser.setDefaultOption("Center, drive over ramp", new CenterLeaveCommunity());
-    
-    //chooser.addOption("Score Two Game Pieces", new ScoreTwo());
-    //chooser.addOption("Score Two Then Ramp", new ScoreTwoThenRamp());
-    //chooser.addOption("Score Two Grab Third", new ScoreTwoGrabThird());
-    //chooser.addOption("Center Drive Up Ramp", new CenterDriveUpRamp());
     SmartDashboard.putData("Auton Chooser", chooser);
+
     allianceChooser.setDefaultOption("Red", "R");
     allianceChooser.addOption("Blue", "B");
     SmartDashboard.putData("Alliance Chooser", allianceChooser);
-    positionChooser.addOption("Left", "L");
-    positionChooser.setDefaultOption("Right", "R");
+
+    positionChooser.setDefaultOption("Left", "L");
+    positionChooser.addOption("Right", "R");
     SmartDashboard.putData("Position Chooser", positionChooser);
 
     horizontalLiftSubsystem.resetPosition();
     verticalLiftSubsystem.resetPosition();
   }
+
   public void stopLogger(){
   }
+
   public void startLogger() {
     //DataLogManager.start();
     //dataLog = DataLogManager.getLog();
   }
+
   public void update(){
     String allianceChoice = allianceChooser.getSelected();
     String positionChoice = positionChooser.getSelected();
@@ -161,9 +160,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     InitializedCommandGroup command = chooser.getSelected();
     command.initialization();
-    System.out.println(command);
     return command;
-    // return new AutoPlaceGamePiece(false, OperatorStateMachine.HIGH);
   }
 
 }

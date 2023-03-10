@@ -38,8 +38,8 @@ public class PickOneGamePiece extends InitializedCommandGroup {
       new ParallelCommandGroup(
         new DriveSwerveProfile(AutonomousProfiles.driveToFirstGamePiece.get(matchData), 0.3),// 0.6), 
         Commands.parallel(
-          Commands.sequence(new Wait(1500), new AdvanceState())),
-          new SetGamePiece(true),
+          Commands.sequence(new Wait(2000), new AdvanceState())),
+          new SetGamePiece(false),
           new SetScoringLevel(OperatorStateMachine.HIGH)
         ),
         new AdvanceState(),

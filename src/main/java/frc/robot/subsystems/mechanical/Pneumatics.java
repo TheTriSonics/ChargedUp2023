@@ -6,6 +6,7 @@ package frc.robot.subsystems.mechanical;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.RobotConstants;
@@ -27,6 +28,7 @@ public class Pneumatics extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putBoolean("Flipper", getFlipperOut());
     /*
     if (RobotContainer.operator.getHID().getRightBumper()) m_intakeSolenoid.set(true);
     if (RobotContainer.operator.getHID().getLeftBumper()) m_intakeSolenoid.set(false);

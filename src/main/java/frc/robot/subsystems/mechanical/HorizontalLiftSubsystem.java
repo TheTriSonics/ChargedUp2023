@@ -19,12 +19,14 @@ public class HorizontalLiftSubsystem extends SubsystemBase {
   public static final int MID = 1;
   public static final int HIGH = 2;
   public static final int TRAVELING = 3;
+  public static final int REST = 4;
+
   public static final double MAX_HORIZONTAL_IN_INCHES = 43.5;
   double[] cubeSetPoints = new double[] {
-    0, 20, 36, 0
+    5, 20, 36, 0, 0
   };
   double[] coneSetPoints = new double[] {
-    0, 21.5, 40.2, 0
+    5, 21.5, 40.2, 0, 0
   };
 
   double[] setPoints = cubeSetPoints;

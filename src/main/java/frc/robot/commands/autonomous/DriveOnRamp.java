@@ -21,11 +21,14 @@ public class DriveOnRamp extends CommandBase {
   double maxSpeed = 0.3; // 0.25;
   double rampDown = 6;
   boolean driveWithDistance = true;
+  boolean timerRunning = false;
+  boolean finished = false;
+  boolean ascending = false;
 
   public DriveOnRamp( boolean nearSide ) {
-    if (nearSide) targetX = 177;
+    if (nearSide) targetX = 178;
     else {
-      targetX = 175;
+      targetX = 182;
     }
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.swerveDrive);
@@ -37,6 +40,9 @@ public class DriveOnRamp extends CommandBase {
   public void initialize() {
     rollOffset = RobotContainer.gyro.getRoll();
     RobotContainer.swerveDrive.setFieldRelative(true);
+    timerRunning = false;
+    finished = false;
+    ascending = false;
   }
 
   public double normalizeAngle(double x) {
@@ -58,13 +64,17 @@ public class DriveOnRamp extends CommandBase {
     if (Math.abs(angleError1) < Math.abs(angleError)) angleError = angleError1;
     double rotSpeed = angleError * RobotData.maxAngularSpeed / 180;
 
+    if (Math.abs(roll) > 10) ascending = true;
+    if (Math.abs(roll) < 8 && ascending) finished = true;
+
     if(deltaX > rampDown) {
       RobotContainer.swerveDrive.drive(maxSpeed * RobotData.maxSpeed, 0, rotSpeed);
       return;
     }
       
-    if (Math.abs(deltaX) <= 2) {
+    if (Math.abs(deltaX) <= 2 && !timerRunning) {
       timer.start();
+      timerRunning = true;
     }
       
     if(Math.abs(deltaX) <= rampDown) {
@@ -73,7 +83,7 @@ public class DriveOnRamp extends CommandBase {
       return;      
     } 
    
-    RobotContainer.swerveDrive.drive(-maxSpeed * RobotData.maxSpeed, 0, 0);
+    RobotContainer.swerveDrive.drive(-maxSpeed * RobotData.maxSpeed, 0, rotSpeed);
      
   }
 
@@ -87,7 +97,7 @@ public class DriveOnRamp extends CommandBase {
   @Override
   public boolean isFinished() {
 
-   return timer.hasElapsed(4); //
+   return finished || timer.hasElapsed(4); //
   // return Math.abs(deltaX) < 2;
   }
 }

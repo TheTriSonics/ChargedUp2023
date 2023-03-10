@@ -60,23 +60,23 @@ public class AutonomousProfiles {
                 new double[][] {
                     {250.0, 40.4},
                     {191.3, 29.7},
-                    {129.9, 29.7},
-                    {64.2, 18.7}
+                    {129.9, 23.7},
+                    {64.2, 10.7}
             }, 
                 new double[] {
-                    180, 20, 0
+                    180, -20, 0
                 }
             ));
         driveToFirstGamePiece.put("RL", 
             new Profile(
                 new double[][] {
                     {250.0, -141.4},
-                    {191.3, -130.7},
-                    {129.9, -130.7},
-                    {64.2, -125.7}
+                    {191.3, -135.7},
+                    {129.9, -135.7},
+                    {64.2, -140.7}
             }, 
                 new double[] {
-                    180, 20, 0
+                    180, 170, 0
                 }
             ));
         driveToFirstGamePiece.put("BR", 
@@ -119,13 +119,13 @@ public class AutonomousProfiles {
         firstGamePieceToSecondPlacement.put("RL", 
             new Profile(
                 new double[][] {
-                    {64.9, -126.4},
-                    {129.9, -133.5},
-                    {191.3, -129.3},
-                    {246.2, -116.0}
+                    {64.9, -140.4},
+                    {129.9, -138.5},
+                    {191.3, -130.3},
+                    {252.2, -120.0}
             }, 
                 new double[] {
-                    -160, 180, 180
+                    -170, 180, 180
                 }
             ));
         firstGamePieceToSecondPlacement.put("BR", 

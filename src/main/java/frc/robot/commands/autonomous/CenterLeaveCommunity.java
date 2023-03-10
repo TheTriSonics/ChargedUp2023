@@ -25,12 +25,12 @@ public class CenterLeaveCommunity extends InitializedCommandGroup {
     double[] odometry, target;
     double targetHeading;
     if (matchData.charAt(0) == "R".charAt(0)) {
-      odometry = new double[] {250, -60, 180};
-      target = new double[] {80, -60, 180};
+      odometry = new double[] {250, -65, 180};
+      target = new double[] {70, -65, 180};
       targetHeading = 0;
     } else {
-      odometry = new double[] {-250, -60, 0};
-      target = new double[] {-80, -60, 0};
+      odometry = new double[] {-250, -65, 0};
+      target = new double[] {-70, -65, 0};
       targetHeading = 180;
     }
 

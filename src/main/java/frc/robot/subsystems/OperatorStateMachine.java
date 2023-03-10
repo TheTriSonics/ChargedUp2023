@@ -103,8 +103,8 @@ public class OperatorStateMachine extends SubsystemBase {
     SmartDashboard.putNumber("Scoring Level", level);
     switch(state) {
       case REST: {
-        if (time >= delays.hLiftDelay) RobotContainer.horizontalLiftSubsystem.setSetPoint(HorizontalLiftSubsystem.LOW);
-        if (time >= delays.vLiftDelay) RobotContainer.verticalLiftSubsystem.setSetPoint(VerticalLiftSubsystem.LOW);
+        if (time >= delays.hLiftDelay) RobotContainer.horizontalLiftSubsystem.setSetPoint(HorizontalLiftSubsystem.REST);
+        if (time >= delays.vLiftDelay) RobotContainer.verticalLiftSubsystem.setSetPoint(VerticalLiftSubsystem.REST);
         if (time >= delays.wheelDelay) RobotContainer.intakeSubsystem.setPower(0);
         if (time >= delays.clampDelay) RobotContainer.pneumatics.setValve(Pneumatics.CLAMP, false);
         if (time >= delays.flipperDelay) RobotContainer.pneumatics.setValve(Pneumatics.FLIPPER, false);
@@ -113,7 +113,7 @@ public class OperatorStateMachine extends SubsystemBase {
       }
       case GAMEPIECEPREP: {
         if (time >= delays.hLiftDelay) RobotContainer.horizontalLiftSubsystem.setSetPoint(HorizontalLiftSubsystem.LOW);
-        if (time >= delays.vLiftDelay) RobotContainer.verticalLiftSubsystem.setSetPoint(VerticalLiftSubsystem.LOW);
+        if (time >= delays.vLiftDelay) RobotContainer.verticalLiftSubsystem.setSetPoint(VerticalLiftSubsystem.REST);
         if (time >= delays.wheelDelay) RobotContainer.intakeSubsystem.setPower(1);
         if (time >= delays.clampDelay) RobotContainer.pneumatics.setValve(Pneumatics.CLAMP, true);
         if (time >= delays.flipperDelay) RobotContainer.pneumatics.setValve(Pneumatics.FLIPPER, true);

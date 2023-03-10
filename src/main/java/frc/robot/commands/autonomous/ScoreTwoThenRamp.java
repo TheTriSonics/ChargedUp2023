@@ -26,9 +26,9 @@ public class ScoreTwoThenRamp extends InitializedCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      pogp, 
-      new DriveToPose(driveToX, -60, driveToHeading, 0.4),
-      new DriveOnRamp(true)
+      pogp//, 
+      //new DriveToPose(driveToX, -60, driveToHeading, 0.4),
+      //new DriveOnRamp(true)
     );
   }
 }

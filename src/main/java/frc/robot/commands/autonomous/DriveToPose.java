@@ -6,6 +6,7 @@ package frc.robot.commands.autonomous;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.mechanical.SwerveDriveTrain;
@@ -20,6 +21,7 @@ public class DriveToPose extends CommandBase {
   double driveFactor = 0;
   double rotFactor = 0;
   double rampDistance = 30;
+  Timer timer;
   public DriveToPose(double x, double y, double angle, double maxPower) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.swerveDrive);
@@ -27,6 +29,7 @@ public class DriveToPose extends CommandBase {
     targetY = y;
     targetAngle = angle;
     this.maxPower = maxPower;
+    timer = new Timer();
   }
 
   // Called when the command is initially scheduled.
@@ -43,6 +46,7 @@ public class DriveToPose extends CommandBase {
     double deltax = targetX - currentPose.getX();
     double deltay = targetY - currentPose.getY();
     distance = Math.sqrt(deltax * deltax + deltay * deltay);
+    if (distance < 10) timer.start();
 
     // determine rotation
 
@@ -65,7 +69,7 @@ public class DriveToPose extends CommandBase {
     RobotContainer.swerveDrive.drive(xSpeed, ySpeed, rotationSpeed);
 
     // check to see if we're finished
-    finished = distance < 20 && distance > lastDistance;
+    finished = (distance < 20 && distance > lastDistance) || timer.hasElapsed(1);
     lastDistance = distance;
 
     // update ramp up 
