@@ -52,6 +52,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  public static boolean LOG_AUTON = true;
+  public static boolean LOG_TELEOP = false;
+
+  public static boolean loggingRunning = false;
   
   public static Gyro gyro = new Gyro();
   public static SwerveDriveTrain swerveDrive = new SwerveDriveTrain();
@@ -79,7 +83,6 @@ public class RobotContainer {
   public RobotContainer() {
     swerveDrive.setDefaultCommand(new SwerveDriveCommand(driver));
     configureButtonBindings();
-    startLogger();
     poseEstimator = new PoseEstimate();
     new AutonomousProfiles();
     //chooser.addOption("Grab Then Ramp", new GrabThenRamp());
@@ -111,9 +114,14 @@ public class RobotContainer {
   public void stopLogger(){
   }
   public void startLogger() {
-    //DataLogManager.start();
-    //dataLog = DataLogManager.getLog();
+    DataLogManager.start();
+    dataLog = DataLogManager.getLog();
   }
+
+  public static boolean prepareLogging() {
+    return LOG_AUTON || LOG_TELEOP;
+  }
+
   public void update(){
     String allianceChoice = allianceChooser.getSelected();
     String positionChoice = positionChooser.getSelected();

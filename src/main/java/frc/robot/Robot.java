@@ -37,10 +37,13 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    //m_robotContainer.startLogger();
 
     compressor = new Compressor(1, PneumaticsModuleType.REVPH);
     compressor.enableAnalog(80, 115);
+
+    if (RobotContainer.prepareLogging()) {
+      m_robotContainer.startLogger();
+    }
   }
 
   /**
@@ -69,6 +72,8 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    // Turn off any logigng at the end of teleop and auton
+    RobotContainer.loggingRunning = false;
   }
 
   @Override
@@ -81,6 +86,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    if (RobotContainer.LOG_AUTON) {
+      RobotContainer.loggingRunning = true;
+    }
     
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     // schedule the autonomous command (example)
@@ -103,6 +111,9 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
+    }
+    if (RobotContainer.LOG_TELEOP) {
+      RobotContainer.loggingRunning = true;
     }
   }
 

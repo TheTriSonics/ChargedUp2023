@@ -108,20 +108,21 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
   @Override
   public void initialize() {
   
-    // velocityX = new DoubleLogEntry(RobotContainer.dataLog, "velocityX");
-    // velocityY = new DoubleLogEntry(RobotContainer.dataLog, "velocityY");
-    // velocityZ = new DoubleLogEntry(RobotContainer.dataLog, "velocityZ");
-    // targetX = new DoubleLogEntry(RobotContainer.dataLog, "target X");
-    // targetY = new DoubleLogEntry(RobotContainer.dataLog, "target Y");
-    // poseX = new DoubleLogEntry(RobotContainer.dataLog, "old pose X");
-    // poseY = new DoubleLogEntry(RobotContainer.dataLog, "old pose Y");
-    // errorX = new DoubleLogEntry(RobotContainer.dataLog, "error X");
-    // errorY = new DoubleLogEntry(RobotContainer.dataLog, "error Y");
-    // targetHeading = new DoubleLogEntry(RobotContainer.dataLog, "target heading");
-    // poseHeading = new DoubleLogEntry(RobotContainer.dataLog, "old pose heading");
-    // messages = new StringLogEntry(RobotContainer.dataLog, "messages");
-    // threadRunningLog = new BooleanLogEntry(RobotContainer.dataLog, "is notifier stopped");
-  
+    if (RobotContainer.prepareLogging()) {
+      velocityX = new DoubleLogEntry(RobotContainer.dataLog, "velocityX");
+      velocityY = new DoubleLogEntry(RobotContainer.dataLog, "velocityY");
+      velocityZ = new DoubleLogEntry(RobotContainer.dataLog, "velocityZ");
+      targetX = new DoubleLogEntry(RobotContainer.dataLog, "target X");
+      targetY = new DoubleLogEntry(RobotContainer.dataLog, "target Y");
+      poseX = new DoubleLogEntry(RobotContainer.dataLog, "old pose X");
+      poseY = new DoubleLogEntry(RobotContainer.dataLog, "old pose Y");
+      errorX = new DoubleLogEntry(RobotContainer.dataLog, "error X");
+      errorY = new DoubleLogEntry(RobotContainer.dataLog, "error Y");
+      targetHeading = new DoubleLogEntry(RobotContainer.dataLog, "target heading");
+      poseHeading = new DoubleLogEntry(RobotContainer.dataLog, "old pose heading");
+      messages = new StringLogEntry(RobotContainer.dataLog, "messages");
+      threadRunningLog = new BooleanLogEntry(RobotContainer.dataLog, "is notifier stopped");
+    }
 
      //Pose2d currentPose = RobotContainer.swerveDrive.getOdometry().getPoseMeters();
     Pose2d currentPose = RobotContainer.poseEstimator.getPose();
@@ -133,8 +134,6 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
 
     isNotifierRunning = true;
     notifier.startPeriodic(0.010);
-
-    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -195,15 +194,17 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
     Point2d errorVelocity = Math2d.smult(errorSpeed / deltaPosition.length(), deltaPosition);
     Point2d speedPoint2d = Math2d.sum2d(feedForward, errorVelocity);
 
-    // velocityX.append(RobotContainer.gyro.getVelocityX());
-    // velocityY.append(RobotContainer.gyro.getVelocityY());
-    // velocityZ.append(RobotContainer.gyro.getVelocityZ());
-    // targetX.append(currentPosition.x);
-    // targetY.append(currentPosition.y);
-    // poseX.append(currentPose.getX());
-    // poseY.append(currentPose.getY());
-    // errorX.append(deltaPosition.x);
-    // errorY.append(deltaPosition.y);
+    if (RobotContainer.loggingRunning) {
+      velocityX.append(RobotContainer.gyro.getVelocityX());
+      velocityY.append(RobotContainer.gyro.getVelocityY());
+      velocityZ.append(RobotContainer.gyro.getVelocityZ());
+      targetX.append(currentPosition.x);
+      targetY.append(currentPosition.y);
+      poseX.append(currentPose.getX());
+      poseY.append(currentPose.getY());
+      errorX.append(deltaPosition.x);
+      errorY.append(deltaPosition.y);
+    }
 
     double xSpeed = speedPoint2d.x;
     double ySpeed = speedPoint2d.y;
@@ -223,14 +224,18 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
         newS = 1;
         currentOmega = maxOmega / 2.0;
         stopNotifier();
-        //messages.append("profile finished");
-        //threadRunningLog.append(isNotifierFinished());
+        if (RobotContainer.loggingRunning) {
+          messages.append("profile finished");
+          threadRunningLog.append(isNotifierFinished());
+        }
         return;
       }
     }
 
-    //messages.append("profile running");
-    //threadRunningLog.append(isNotifierFinished());
+    if (RobotContainer.loggingRunning) {
+      messages.append("profile running");
+      threadRunningLog.append(isNotifierFinished());
+    }
 
     // now deal with the heading of the robot
     double deltaAngle = headings[currentCurveNumber] - currentPose.getRotation().getDegrees();
@@ -243,8 +248,10 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
       currentOmega = maxOmega;
     double rotSpeed = deltaAngle / 180 * currentOmega;
 
-    //targetHeading.append(headings[currentCurveNumber]);
-    //poseHeading.append(currentPose.getRotation().getDegrees());
+    if (RobotContainer.loggingRunning) {
+      targetHeading.append(headings[currentCurveNumber]);
+      poseHeading.append(currentPose.getRotation().getDegrees());
+    }
 
     // finally, tell the drive train what to do
     // RobotContainer.swerveDrive.drive(xSpeed, ySpeed, rotSpeed);
