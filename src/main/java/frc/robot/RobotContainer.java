@@ -14,7 +14,9 @@ import frc.robot.commands.AdvanceState;
 import frc.robot.commands.GoHome;
 import frc.robot.commands.SetFieldRelative;
 import frc.robot.commands.SetGamePiece;
+import frc.robot.commands.SetOperatorState;
 import frc.robot.commands.SetScoringLevel;
+import frc.robot.commands.SetSlowDriveMode;
 import frc.robot.commands.SwerveDriveCommand;
 import frc.robot.commands.autonomous.AutoPlaceGamePiece;
 import frc.robot.commands.autonomous.AutoScore;
@@ -30,7 +32,7 @@ import frc.robot.commands.autonomous.ScoreTwo;
 import frc.robot.commands.autonomous.ScoreTwoGrabThird;
 import frc.robot.commands.autonomous.ScoreTwoLowThenRamp;
 import frc.robot.commands.autonomous.ScoreTwoThenLoopyToRamp;
-import frc.robot.commands.autonomous.ScoreTwoThenRamp;
+import frc.robot.commands.autonomous.ScoreTwo;
 import frc.robot.commands.autonomous.StrafeToVisionTarget;
 import frc.robot.subsystems.OperatorStateMachine;
 import frc.robot.subsystems.controls.PoseEstimate;
@@ -84,21 +86,21 @@ public class RobotContainer {
     poseEstimator = new PoseEstimate();
     new AutonomousProfiles();
 
-    chooser.addOption("Just Loopy Path", new LoopyPathToChargeStation());
-    chooser.addOption("Score Two", new ScoreTwoThenRamp());
+    //chooser.addOption("Just Loopy Path", new LoopyPathToChargeStation());
+    chooser.setDefaultOption("Score Two", new ScoreTwo());
     chooser.addOption("Score, Pick one, Ramp", new GrabThenRamp());
-    chooser.setDefaultOption("Score Two Then Center Ramp", new ScoreTwoLowThenRamp());
-    chooser.addOption("Score Second To Third Gamepiece", new ScoreTwoGrabThird());
+    //chooser.addOption("Score Two Then Center Ramp", new ScoreTwoLowThenRamp());
+    //chooser.addOption("Score Second To Third Gamepiece", new ScoreTwoGrabThird());
     chooser.addOption("Drive Over ramp", new CenterLeaveCommunity());
-    chooser.addOption("Center, then ramp", new CenterDriveUpRamp());
+    ///chooser.addOption("Center, then ramp", new CenterDriveUpRamp());
     SmartDashboard.putData("Auton Chooser", chooser);
 
-    allianceChooser.setDefaultOption("Red", "R");
-    allianceChooser.addOption("Blue", "B");
+    allianceChooser.addOption("Red", "R");
+    allianceChooser.setDefaultOption("Blue", "B");
     SmartDashboard.putData("Alliance Chooser", allianceChooser);
 
-    positionChooser.setDefaultOption("Left", "L");
-    positionChooser.addOption("Right", "R");
+    positionChooser.addOption("Left", "L");
+    positionChooser.setDefaultOption("Right", "R");
     SmartDashboard.putData("Position Chooser", positionChooser);
 
     horizontalLiftSubsystem.resetPosition();
@@ -140,7 +142,8 @@ public class RobotContainer {
     driver.b().onTrue(new SetFieldRelative(true));
     driver.y().whileTrue(new StrafeToVisionTarget(true));
     driver.a().whileTrue(new StrafeToVisionTarget(false));
-    driver.rightBumper().whileTrue(new AutoScore());
+    driver.rightBumper().onTrue(new SetSlowDriveMode(false));
+    driver.leftBumper().onTrue(new SetSlowDriveMode(true));
 
     
     operator.rightBumper().onTrue(new AdvanceState());
@@ -149,7 +152,10 @@ public class RobotContainer {
     operator.rightTrigger(0.5).onTrue(new SetGamePiece(false));
     operator.a().onTrue(new SetScoringLevel(OperatorStateMachine.LOW));
     operator.b().onTrue(new SetScoringLevel(OperatorStateMachine.MID));
-    operator.y().onTrue(new SetScoringLevel(OperatorStateMachine.HIGH));    
+    operator.y().onTrue(new SetScoringLevel(OperatorStateMachine.HIGH));  
+    operator.x().onTrue(new SetScoringLevel(OperatorStateMachine.RIGHTCONE));
+    operator.back().onTrue(new SetOperatorState(OperatorStateMachine.GAMEPIECEPREPSHELF));
+    operator.start().onTrue(new SetOperatorState(OperatorStateMachine.GAMEPIECEPREPSLIDE));
   }
 
   /**
@@ -161,6 +167,7 @@ public class RobotContainer {
     InitializedCommandGroup command = chooser.getSelected();
     command.initialization();
     return command;
+    //return new DriveOnRamp(true);
   }
 
 }

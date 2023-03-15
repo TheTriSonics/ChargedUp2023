@@ -34,7 +34,7 @@ public final class Constants {
     public static final int FLIPPER_SOLENOID = 0;
 
     //sensors
-    //public static final int INTAKE_PHOTO_EYE = 0;
+    public static final int INTAKE_PHOTO_EYE = 4;
 
   }
 }

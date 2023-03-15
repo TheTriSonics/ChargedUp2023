@@ -14,6 +14,7 @@ import frc.robot.commands.InScoringPosition;
 import frc.robot.commands.SetGamePiece;
 import frc.robot.commands.SetOdometry;
 import frc.robot.commands.SetScoringLevel;
+import frc.robot.commands.SetUseAprilTags;
 import frc.robot.commands.Wait;
 import frc.robot.subsystems.OperatorStateMachine;
 
@@ -33,18 +34,20 @@ public class PickOneGamePiece extends InitializedCommandGroup {
     addCommands(
       Commands.parallel(
         new AutoPlaceGamePiece(false, OperatorStateMachine.HIGH), 
-        new SetOdometry(odometry[0], odometry[1], odometry[2])
+        new SetOdometry(odometry[0], odometry[1], odometry[2]),
+        new SetUseAprilTags(matchData == "RL" || matchData == "BR")
       ),
       new ParallelCommandGroup(
-        new DriveSwerveProfile(AutonomousProfiles.driveToFirstGamePiece.get(matchData), 0.3),// 0.6), 
+        new DriveSwerveProfile(AutonomousProfiles.driveToFirstGamePiece.get(matchData), 0.3, true),// 0.6), 
         Commands.parallel(
-          Commands.sequence(new Wait(2000), new AdvanceState())),
-          new SetGamePiece(false),
+          Commands.sequence(new Wait(2500), new AdvanceState())),
+          new SetGamePiece(true),
           new SetScoringLevel(OperatorStateMachine.HIGH)
         ),
         new AdvanceState(),
-        new Wait(200),
-        new DriveSwerveProfile(AutonomousProfiles.firstGamePieceToSecondPlacement.get(matchData), 0.3), //0.6));
+        new Wait(500),
+        new SetGamePiece(true),
+        new DriveSwerveProfile(AutonomousProfiles.firstGamePieceToSecondPlacement.get(matchData), 0.35), //0.6));
         Commands.parallel(
           new AdvanceState(),
           new InScoringPosition()

@@ -54,7 +54,12 @@ public class PoseEstimate extends SubsystemBase {
         pose);
   }
 
-  boolean aprilTagSeen = true;
+  boolean aprilTagSeen = false;
+  boolean useAprilTags = false;
+  public void setUseAprilTags(boolean use) {
+    useAprilTags = use;
+    aprilTagSeen = false;
+  }
 
   @Override
   public void periodic() {
@@ -81,29 +86,17 @@ public class PoseEstimate extends SubsystemBase {
         backCamera = true;
       }  
     }
-    SmartDashboard.putBoolean("backCamera", backCamera);
-    // poseX.append(pose.getX());
-    // poseY.append(pose.getY());
-    // poseHeading.append(pose.getRotation().getDegrees());
-    // if (llPose != null) {
-    //   llPoseX.append(llPose.getX());
-    //   llPoseY.append(llPose.getY());
-    //   llPoseHeading.append(llPose.getRotation().getDegrees());
-    // } else {
-    //   llPoseX.append(Double.NaN);
-    //   llPoseY.append(Double.NaN);
-    //   llPoseHeading.append(Double.NaN);
-    // }
+    
+    // SmartDashboard.putBoolean("backCamera", backCamera);
     double timeStamp = RobotContainer.limelight.getTimeStamp();
     boolean goodTag = false;
-    if (llPose != null && timeStamp != lastTimeStamp) {
+    if (llPose != null) { //} && timeStamp != lastTimeStamp) {
       if (aprilTagSeen == false) {
         goodTag = true;
         aprilTagSeen = true;
         // RobotContainer.gyro.setInitialHeading(llPose.getRotation().getDegrees());
-        poseEstimator.resetPosition(RobotContainer.gyro.getRotation2d(),
+        if (useAprilTags) poseEstimator.resetPosition(RobotContainer.gyro.getRotation2d(),
             RobotContainer.swerveDrive.getModulePositions(), llPose);
-
       } else {
         // goodTag = true;
         double deltaX = llPose.getX() - pose.getX();
@@ -112,15 +105,11 @@ public class PoseEstimate extends SubsystemBase {
         if (distance < 40) { // && llPose.getX() > 160) {
           goodTag = true;
           llPose = new Pose2d(llPose.getX(), llPose.getY(), pose.getRotation());
-          poseEstimator.addVisionMeasurement(llPose, RobotContainer.limelight.getLastTimeStamp());
+          if (useAprilTags) poseEstimator.addVisionMeasurement(llPose, RobotContainer.limelight.getLastTimeStamp());
         }
       }
     }
-
-    //usedLimeLight.append(goodTag);
-    // poseEstimator.resetPosition(RobotContainer.gyro.getRotation2d(),
-    // RobotContainer.swerveDrive.getModulePositions(), pose);
-
+    
     SmartDashboard.putNumber("X Location", pose.getX());
     SmartDashboard.putNumber("Y Location", pose.getY());
     SmartDashboard.putNumber("Heading", pose.getRotation().getDegrees());

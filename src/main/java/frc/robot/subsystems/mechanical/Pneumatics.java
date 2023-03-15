@@ -28,7 +28,7 @@ public class Pneumatics extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Flipper", getFlipperOut());
+    //SmartDashboard.putBoolean("Flipper", getFlipperOut());
     /*
     if (RobotContainer.operator.getHID().getRightBumper()) m_intakeSolenoid.set(true);
     if (RobotContainer.operator.getHID().getLeftBumper()) m_intakeSolenoid.set(false);

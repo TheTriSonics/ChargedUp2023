@@ -18,31 +18,35 @@ public class DriveOnRamp extends CommandBase {
   boolean nearSide;
   Timer timer;
   double rollOffset = 0;
-  double maxSpeed = 0.3; // 0.25;
-  double rampDown = 6;
-  boolean driveWithDistance = true;
+  double maxSpeed =  0.3;
+  double rampDown = 3;
   boolean timerRunning = false;
   boolean finished = false;
   boolean ascending = false;
 
   public DriveOnRamp( boolean nearSide ) {
-    if (nearSide) targetX = 178;
+    if (nearSide) targetX = 180;
     else {
-      targetX = 182;
+      targetX = 190;
     }
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.swerveDrive);
     timer = new Timer();
+  }
+
+  public DriveOnRamp(boolean nearSide, double rampTarget) {
+    this(nearSide);
+    targetX = rampTarget;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     rollOffset = RobotContainer.gyro.getRoll();
-    RobotContainer.swerveDrive.setFieldRelative(true);
     timerRunning = false;
     finished = false;
     ascending = false;
+    String matchData = RobotContainer.getMatchData();
+    if (matchData.startsWith("B", 0)) targetX *= -1;
   }
 
   public double normalizeAngle(double x) {
@@ -63,28 +67,18 @@ public class DriveOnRamp extends CommandBase {
     double angleError1 = normalizeAngle(180 - heading);
     if (Math.abs(angleError1) < Math.abs(angleError)) angleError = angleError1;
     double rotSpeed = angleError * RobotData.maxAngularSpeed / 180;
+    rotSpeed = 0;
 
     if (Math.abs(roll) > 10) ascending = true;
     if (Math.abs(roll) < 8 && ascending) finished = true;
 
-    if(deltaX > rampDown) {
-      RobotContainer.swerveDrive.drive(maxSpeed * RobotData.maxSpeed, 0, rotSpeed);
-      return;
-    }
-      
-    if (Math.abs(deltaX) <= 2 && !timerRunning) {
-      timer.start();
-      timerRunning = true;
-    }
-      
-    if(Math.abs(deltaX) <= rampDown) {
-      double xSpeed = maxSpeed/rampDown * deltaX * RobotData.maxSpeed;
-      RobotContainer.swerveDrive.drive(xSpeed, 0, rotSpeed);
-      return;      
+    if(Math.abs(deltaX) > rampDown) {
+      if (deltaX > 0) RobotContainer.swerveDrive.drive(maxSpeed * RobotData.maxSpeed, 0, rotSpeed);
+      else RobotContainer.swerveDrive.drive(-maxSpeed * RobotData.maxSpeed, 0, rotSpeed);
+    } else {
+      double xSpeed = deltaX/rampDown * maxSpeed * RobotData.maxSpeed;
+      RobotContainer.swerveDrive.drive(xSpeed, 0, rotSpeed);     
     } 
-   
-    RobotContainer.swerveDrive.drive(-maxSpeed * RobotData.maxSpeed, 0, rotSpeed);
-     
   }
 
   // Called once the command ends or is interrupted.
@@ -97,7 +91,7 @@ public class DriveOnRamp extends CommandBase {
   @Override
   public boolean isFinished() {
 
-   return finished || timer.hasElapsed(4); //
+   return finished; //
   // return Math.abs(deltaX) < 2;
   }
 }

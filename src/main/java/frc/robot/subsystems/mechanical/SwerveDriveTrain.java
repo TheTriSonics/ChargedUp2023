@@ -56,6 +56,7 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
   double goalX = 27 * 12;
   double goalY = 27 * 6;
   double kP = 0.015;
+  double scaleSpeed = 1;
 
   private final SwerveModulePosition[] defaultPos = new SwerveModulePosition[] {
       new SwerveModulePosition(0, new Rotation2d(0)),
@@ -88,6 +89,11 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
     driveAligned = !driveAligned;
   }
 
+  public void setSlowDriveMode(boolean slow) {
+    if (slow) scaleSpeed = 0.4;
+    else scaleSpeed = 1;
+  }
+
   /**
    * Method to drive the robot using joystick info.
    *
@@ -99,6 +105,11 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
    */
   @SuppressWarnings("ParameterName")
   public void drive(double xSpeed, double ySpeed, double rot) {
+    if (RobotContainer.driver.leftTrigger().getAsBoolean()) scaleSpeed = 0.4;
+    else scaleSpeed = 1;
+    xSpeed *= scaleSpeed;
+    ySpeed *= scaleSpeed;
+    rot *= scaleSpeed;
     if (driveAligned) {
       if (RobotContainer.limelight.isTargetValid()) {
         double x = -RobotContainer.limelight.getTargetX();

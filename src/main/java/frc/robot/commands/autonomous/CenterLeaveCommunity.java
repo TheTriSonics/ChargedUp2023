@@ -9,6 +9,7 @@ import frc.robot.RobotContainer;
 import frc.robot.commands.DriveSwerveProfile;
 import frc.robot.commands.RotateToHeading;
 import frc.robot.commands.SetOdometry;
+import frc.robot.commands.SetUseAprilTags;
 import frc.robot.commands.Wait;
 import frc.robot.subsystems.OperatorStateMachine;
 
@@ -24,24 +25,28 @@ public class CenterLeaveCommunity extends InitializedCommandGroup {
     String matchData = RobotContainer.getMatchData();
     double[] odometry, target;
     double targetHeading;
-    if (matchData.charAt(0) == "R".charAt(0)) {
-      odometry = new double[] {250, -65, 180};
-      target = new double[] {70, -65, 180};
+    double rampTarget;
+    if (matchData.startsWith("R")) {
+      odometry = new double[] {250, -60, 180};
+      target = new double[] {70, -60, 180};
+      rampTarget = 180;
       targetHeading = 0;
     } else {
-      odometry = new double[] {-250, -65, 0};
-      target = new double[] {-70, -65, 0};
+      odometry = new double[] {-250, -60, 0};
+      target = new double[] {-70, -60, 0};
+      rampTarget = -180;
       targetHeading = 180;
     }
 
     addCommands(
       Commands.parallel(
-        new AutoPlaceGamePiece(true, OperatorStateMachine.HIGH), 
+        //new AutoPlaceGamePiece(true, OperatorStateMachine.HIGH), 
         new SetOdometry(odometry[0], odometry[1], odometry[2])
+       // new SetUseAprilTags(true)
       ),
       new DriveToPose(target[0], target[1], target[2], 0.3),
       new RotateToHeading(targetHeading),
-      new DriveOnRamp(true)
+      new DriveOnRamp(true, rampTarget)
     );
     
   }

@@ -67,7 +67,7 @@ public class SwerveDriveCommand extends CommandBase {
     if (RobotContainer.swerveDrive.isFieldRelative())
       scale = 1;
     SmartDashboard.putNumber("input", xInput);
-    RobotContainer.swerveDrive.drive(scale * xSpeed, scale * ySpeed, rot);
+    RobotContainer.swerveDrive.drive(-scale * xSpeed, -scale * ySpeed, rot);
   }
 
   // Called once the command ends or is interrupted.

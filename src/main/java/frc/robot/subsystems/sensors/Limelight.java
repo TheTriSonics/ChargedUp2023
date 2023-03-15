@@ -93,11 +93,13 @@ public class Limelight extends SubsystemBase implements Runnable{
     
     double[] newPose = NetworkTableInstance.getDefault().getTable("limelight-left").getEntry("botpose")
         .getDoubleArray(new double[] { 1234 });
+    
     if (newPose.length < 6 || (newPose[0] == 0.0 && newPose[1] == 0)) {
       pose = null;
       timesSeen = 0;
       return;
     }
+    
     timesSeen++;
     if (timesSeen < requiredTimesSeen)
       return;

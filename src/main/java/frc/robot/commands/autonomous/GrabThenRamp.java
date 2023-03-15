@@ -4,6 +4,7 @@
 
 package frc.robot.commands.autonomous;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.RobotContainer;
@@ -15,37 +16,24 @@ import frc.robot.subsystems.OperatorStateMachine;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class GrabThenRamp extends InitializedCommandGroup {
   /** Creates a new GrabThenRamp. */
+  double[] redTarget = new double[] {110, -60, 0};
+  double[] blueTarget = new double[] {-110, -45, 180};
+  double[] target;
   public GrabThenRamp() {
-    double[][] waypoints = new double[][] {
-      { 250.0, 30.0 },
-      { 190.87931749063435, 30.397353902458427 },
-      { 150.5344885237755, 30.10596326884294 },
-      { 67.03448798270918, 20.390731496573693 }
-    };
-    double[] headings = new double[] {
-      100, 60, 0
-    };
-    double[][]waypoints2 = new double[][] {
-      {72.62069495389075, 26.821195041112187},
-      {85.88793651044695, -13.231784205965681},
-      {107.5344885237755, -51.854299908505055}
-    };
-    double[] headings2 = new double[] {
-      150, 180
-    };
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
 
   }
 
   public void initialization() {
     String matchData = RobotContainer.getMatchData();
     double[] odometry = AutonomousProfiles.initialOdometries.get(matchData);
-    
+    if (matchData.startsWith("R", 0)) target = redTarget;
+    else target = blueTarget;
+    SmartDashboard.putNumber("target X", target[0]);
     addCommands(
       Commands.parallel(
         new AutoPlaceGamePiece(false, OperatorStateMachine.HIGH), 
         new SetOdometry(odometry[0], odometry[1], odometry[2])
+        //new SetUseAprilTags(matchData == "RL" || matchData == "BR")
       ),
       new ParallelCommandGroup(
         new DriveSwerveProfile(AutonomousProfiles.driveToFirstGamePiece.get(matchData), 0.3),// 0.6), 
@@ -55,8 +43,9 @@ public class GrabThenRamp extends InitializedCommandGroup {
           new SetScoringLevel(OperatorStateMachine.HIGH)
         ),
         new AdvanceState(),
+        //new SetUseAprilTags(true),
         new Wait(200),
-        new DriveToPose(120, -60, 0, 0.50),
+        new DriveToPose(target[0], target[1], target[2], 0.50),
         new DriveOnRamp(false)
     );
   }

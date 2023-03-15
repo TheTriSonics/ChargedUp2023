@@ -22,27 +22,18 @@ import frc.robot.subsystems.OperatorStateMachine;
 public class CenterDriveUpRamp extends InitializedCommandGroup {
   /** Creates a new CenterDriveUpRamp. */
   public CenterDriveUpRamp() {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    /*
-    addCommands(
-      new SetOdometry(250, -32, 180),
-      new DriveToPose(230, -40, 180, 0.3),
-      new Wait(1000),
-      new DriveOnRamp(true)
-    );
-    */
   }
 
   public void initialization() {
+    System.out.println("INITIALIZING");
     String matchData = RobotContainer.getMatchData();
     double[] odometry, target;
     if (matchData.charAt(0) == "R".charAt(0)) {
       odometry = new double[] {250, -60, 180};
-      target = new double[] {200, -60, 180};
+      target = new double[] {220, -60, 180};
     } else {
       odometry = new double[] {-250, -60, 0};
-      target = new double[] {-200, -60, 0};
+      target = new double[] {-220, -60, 0};
     }
 
     
@@ -52,6 +43,7 @@ public class CenterDriveUpRamp extends InitializedCommandGroup {
         new SetOdometry(odometry[0], odometry[1], odometry[2])
       ),
       new DriveToPose(target[0], target[1], target[2], 0.5),
+      new Wait(3000),
       new DriveOnRamp(true)
     );
 

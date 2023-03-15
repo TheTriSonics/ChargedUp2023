@@ -9,6 +9,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
@@ -20,13 +22,16 @@ public class HorizontalLiftSubsystem extends SubsystemBase {
   public static final int HIGH = 2;
   public static final int TRAVELING = 3;
   public static final int REST = 4;
+  public static final int SHELF = 5;
+  public static final int SLIDE = 6;
+  public static final int RIGHTCONE = LOW;
 
   public static final double MAX_HORIZONTAL_IN_INCHES = 43.5;
   double[] cubeSetPoints = new double[] {
-    5, 20, 36, 0, 0
+    5, 20, 36, 0, 0, 0, 0 // 36
   };
   double[] coneSetPoints = new double[] {
-    5, 21.5, 40.2, 0, 0
+    5, 21.5, 38, 0, 0, 0, 0 // was 40.2
   };
 
   double[] setPoints = cubeSetPoints;
@@ -35,22 +40,31 @@ public class HorizontalLiftSubsystem extends SubsystemBase {
   ProfiledPIDController controller = new ProfiledPIDController(0.3, 0, 0.00, constraints, 0.02);
   
   private final TalonFX m_slideMotor = new TalonFX(RobotConstants.SLIDE_MOTOR);
+  private final Encoder encoder = new Encoder(0, 1);
 
   double setPoint = 0;
-  final double INCHESPERPULSE = 43.375/251813;
+  final double INCHESPERPULSE = 43.375/251813; // for the Talon
+  final double ENCODERINCHESPERPULSE = INCHESPERPULSE * 106661 / 5352.75;
 
   /** Creates a new HorizontalLiftSubsystem. */
-  public HorizontalLiftSubsystem() {}
+  public HorizontalLiftSubsystem() {
+    encoder.setReverseDirection(true);
+    
+  }
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("H Slide Position", getPosition());
+    SmartDashboard.putNumber("H Slide Encoder", encoder.getDistance());
+    SmartDashboard.putNumber("H Slide Falcon", m_slideMotor.getSelectedSensorPosition());
     /* 
+    
     if (RobotContainer.operator.getHID().getBButton()) controller.setGoal(30);
     if (RobotContainer.operator.getHID().getXButton()) controller.setGoal(10);
     if (RobotContainer.operator.getHID().getYButton()) controller.setGoal(0);
     */
     // This method will be called once per scheduler run
-    double power = -RobotContainer.operator.getRightY();
+    double power = -0.75*RobotContainer.operator.getRightY();
     double position = getPosition();
     if (Math.abs(power) < 0.1) {
       power = controller.calculate(position);
@@ -60,8 +74,8 @@ public class HorizontalLiftSubsystem extends SubsystemBase {
       RobotContainer.operatorStateMachine.setDisabled(true);
     }
     setPower(power);
-    SmartDashboard.putNumber("H Slide Power", power);
-    SmartDashboard.putNumber("H Slide", getPosition());
+    //SmartDashboard.putNumber("H Slide Power", power);
+    //SmartDashboard.putNumber("H Slide", getPosition());
   }
 
   public void setPower(double power) {
@@ -72,8 +86,8 @@ public class HorizontalLiftSubsystem extends SubsystemBase {
     else if (power < 0 && getPosition() < 0.1) {
       power = 0;
     }
-    SmartDashboard.putNumber("Orig Power", origPower);
-    SmartDashboard.putNumber("Final Power", power);
+    //SmartDashboard.putNumber("Orig Power", origPower);
+    //SmartDashboard.putNumber("Final Power", power);
     m_slideMotor.set(TalonFXControlMode.PercentOutput, power);
   }
 
@@ -92,7 +106,8 @@ public class HorizontalLiftSubsystem extends SubsystemBase {
   }
 
   public double getPosition() {
-    return m_slideMotor.getSelectedSensorPosition() * INCHESPERPULSE;
+    //return m_slideMotor.getSelectedSensorPosition() * INCHESPERPULSE;
+    return encoder.getDistance() * ENCODERINCHESPERPULSE;
   }
 
   public void resetPosition() {

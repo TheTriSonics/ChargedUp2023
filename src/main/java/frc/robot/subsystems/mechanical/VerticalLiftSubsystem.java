@@ -22,13 +22,16 @@ public class VerticalLiftSubsystem extends SubsystemBase {
   public static final int HIGH = 2;
   public static final int TRAVELING = 3;
   public static final int REST = 4;
+  public static final int SHELF = 5;
+  public static final int SLIDE = 6;
+  public static final int RIGHTCONE = 7;
   public static final double MAX_VERTICAL_IN_INCHES = 48.00;
   static final double INCHESPERPULSE = 49.25 / 107638;
   double[] cubeSetPoints = new double[] {
-    12, 23.8, 36, 5, 0
+    12, 24, 43, 8, 0, 36, 24, 5
   };
   double[] coneSetPoints = new double[] {
-    12, 38, 49.5, 5, 0
+    12, 38, 49.5, 8, 0, 36, 21, 5
   };
   double[] setPoints = cubeSetPoints;
   
@@ -47,7 +50,7 @@ public class VerticalLiftSubsystem extends SubsystemBase {
   private final TalonFX m_leftLiftMotor = new TalonFX(RobotConstants.LEFT_LIFT_MOTOR);
   private final TalonFX m_rightLiftMotor = new TalonFX(RobotConstants.RIGHT_LIFT_MOTOR);
 
-  TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(40, 100);
+  TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(40, 50); // accel was = 100
   ProfiledPIDController controller = new ProfiledPIDController(0.4, 0, 0.00, constraints, 0.02);
   
   private int m_targetCounts = 0;
@@ -69,7 +72,7 @@ public class VerticalLiftSubsystem extends SubsystemBase {
     if (RobotContainer.operator.getHID().getXButton()) controller.setGoal(10);
     if (RobotContainer.operator.getHID().getYButton()) controller.setGoal(0);
     */
-    double power = -RobotContainer.operator.getLeftY();
+    double power = -0.75*RobotContainer.operator.getLeftY();
     if (Math.abs(power) < 0.1) {
       power = controller.calculate(getPosition());
     } else {
@@ -78,8 +81,8 @@ public class VerticalLiftSubsystem extends SubsystemBase {
       RobotContainer.operatorStateMachine.setDisabled(true);
     }
     setPower(power);
-    SmartDashboard.putNumber("V Slide Power", power);
-    SmartDashboard.putNumber("V Slide", getPosition());
+    //SmartDashboard.putNumber("V Slide Power", power);
+    //SmartDashboard.putNumber("V Slide", getPosition());
     // This method will be called once per scheduler run
   }
 

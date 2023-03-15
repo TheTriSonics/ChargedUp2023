@@ -21,7 +21,7 @@ public class IntakeSubsystem extends SubsystemBase {
   private final CANSparkMax m_leftIntakeMotor = new CANSparkMax(RobotConstants.LEFT_INTAKE_MOTOR, MotorType.kBrushless);
   private final CANSparkMax m_rightIntakeMotor = new CANSparkMax(RobotConstants.RIGHT_INTAKE_MOTOR, MotorType.kBrushless);
   
-  // private final AnalogInput m_photoEye = new AnalogInput(RobotConstants.INTAKE_PHOTO_EYE);
+  private final AnalogInput m_photoEye = new AnalogInput(RobotConstants.INTAKE_PHOTO_EYE);
   
 
   /** Creates a new IntakeSubsystem. */
@@ -31,24 +31,18 @@ public class IntakeSubsystem extends SubsystemBase {
     //m_rightIntakeMotor.setInverted(true);
   }
 
+  public boolean getPhotoEye(){
+    return (m_photoEye.getVoltage() > 2.5);
+  }
+
   @Override
   public void periodic() {
-    /* 
-    double power = 0;
-    if (RobotContainer.operator.getHID().getLeftTriggerAxis() >= 0.5) {
-      power = 0.5;
-    }
     
-    if (RobotContainer.operator.getHID().getRightTriggerAxis() >= 0.5) {
-      power = -0.5;
-    }
-
-    setPower(power);
-    */
   }
   
   public void setPower(double power) {
-    if (RobotContainer.pneumatics.getIntakeOut() == false) power = 0;
+    if (RobotContainer.pneumatics.getIntakeOut() == false && RobotContainer.pneumatics.getFlipperOut()) power = 0;
+    if (getPhotoEye() && power > 0) power = 0;
     m_leftIntakeMotor.set(power);
     m_rightIntakeMotor.set(-power);
   }

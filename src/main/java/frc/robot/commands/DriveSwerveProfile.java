@@ -57,6 +57,13 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
       velocityX, velocityY, velocityZ;
   StringLogEntry messages;
   BooleanLogEntry threadRunningLog;
+
+  boolean photoEyeShutoff = false;
+  public DriveSwerveProfile(Profile profile, double power, boolean photoEyeShutoff) {
+    this(profile.waypoints, profile.headings, power);
+    this.photoEyeShutoff = photoEyeShutoff;
+  }
+
   public DriveSwerveProfile(Profile profile, double power) {
     this(profile.waypoints, profile.headings, power);
   }
@@ -211,6 +218,11 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
     // Prepare to update new parameter on curve
     double deltaS = currentVelocity * deltaT / currentTangent.length();
     double newS = currentS + deltaS;
+    if (photoEyeShutoff &&  currentCurveNumber == numCurves - 1 && RobotContainer.intakeSubsystem.getPhotoEye()) {
+      finished = true;
+      stopNotifier();
+      return;
+    }
     // System.out.println(currentCurveNumber);
     if (newS > 1) { // we are going to the next curve
       // this is a little hacky, math could be improved, but probably not a big deal

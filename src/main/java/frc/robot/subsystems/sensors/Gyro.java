@@ -17,6 +17,9 @@ public class Gyro extends SubsystemBase {
   Rotation2d initialHeading = new Rotation2d();
   double offsetX = 0;
   double offsetY = 0;
+  int rollNumber = 5;
+  double[] rollReadings = new double[rollNumber];
+  int rollCount = 0;
 
   public Gyro() {
   }
@@ -39,6 +42,12 @@ public class Gyro extends SubsystemBase {
 
   public double getRoll() {
     return gyro.getRoll();
+  }
+
+  public double getRollAverage() {
+    double sum = 0;
+    for (int i = 0; i < rollNumber; i++) sum += rollReadings[i];
+    return sum / rollNumber;
   }
 
   public Rotation2d getRotation2d() {
@@ -67,7 +76,11 @@ public class Gyro extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // System.out.println(gyro.getRotation2d());
-    SmartDashboard.putNumber("Yaw", getRotation2d().getDegrees());
-    SmartDashboard.putNumber("Roll", gyro.getRoll());
+    rollReadings[rollCount] = getRoll();
+    rollCount = (rollCount + 1) % rollNumber;
+
+    // SmartDashboard.putNumber("Yaw", getRotation2d().getDegrees());
+    // SmartDashboard.putNumber("Roll", getRollAverage());
+    // SmartDashboard.putNumber("Pitch", getPitch());
   }
 }
