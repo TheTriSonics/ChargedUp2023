@@ -41,7 +41,8 @@ public class Gyro extends SubsystemBase {
   }
 
   public double getRoll() {
-    return gyro.getRoll();
+    return gyro.getPitch();
+    //return gyro.getRoll();
   }
 
   public double getRollAverage() {

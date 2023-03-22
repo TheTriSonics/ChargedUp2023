@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AdvanceState;
 import frc.robot.commands.GoHome;
+import frc.robot.commands.SetDriveDirection;
 import frc.robot.commands.SetFieldRelative;
 import frc.robot.commands.SetGamePiece;
 import frc.robot.commands.SetOperatorState;
@@ -24,6 +25,7 @@ import frc.robot.commands.autonomous.AutonomousProfiles;
 import frc.robot.commands.autonomous.CenterDriveUpRamp;
 import frc.robot.commands.autonomous.CenterLeaveCommunity;
 import frc.robot.commands.autonomous.DriveOnRamp;
+import frc.robot.commands.autonomous.DriveOnRamp2;
 import frc.robot.commands.autonomous.GrabThenRamp;
 import frc.robot.commands.autonomous.InitializedCommandGroup;
 import frc.robot.commands.autonomous.LoopyPathToChargeStation;
@@ -95,12 +97,12 @@ public class RobotContainer {
     ///chooser.addOption("Center, then ramp", new CenterDriveUpRamp());
     SmartDashboard.putData("Auton Chooser", chooser);
 
-    allianceChooser.addOption("Red", "R");
-    allianceChooser.setDefaultOption("Blue", "B");
+    allianceChooser.setDefaultOption("Red", "R");
+    allianceChooser.addOption("Blue", "B");
     SmartDashboard.putData("Alliance Chooser", allianceChooser);
 
-    positionChooser.addOption("Left", "L");
-    positionChooser.setDefaultOption("Right", "R");
+    positionChooser.setDefaultOption("Left", "L");
+    positionChooser.addOption("Right", "R");
     SmartDashboard.putData("Position Chooser", positionChooser);
 
     horizontalLiftSubsystem.resetPosition();
@@ -144,7 +146,8 @@ public class RobotContainer {
     driver.a().whileTrue(new StrafeToVisionTarget(false));
     driver.rightBumper().onTrue(new SetSlowDriveMode(false));
     driver.leftBumper().onTrue(new SetSlowDriveMode(true));
-
+    driver.start().onTrue(new SetDriveDirection(false));
+    driver.back().onTrue(new SetDriveDirection(true));
     
     operator.rightBumper().onTrue(new AdvanceState());
     operator.leftBumper().onTrue(new GoHome());
@@ -167,7 +170,7 @@ public class RobotContainer {
     InitializedCommandGroup command = chooser.getSelected();
     command.initialization();
     return command;
-    //return new DriveOnRamp(true);
+    //return new DriveOnRamp2();
   }
 
 }

@@ -46,6 +46,12 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
    * private final SwerveModule m_frontRight = new SwerveModule(13, 23, 3, 3907,
    * "Front Right", false);
    */
+  /*
+  private final SwerveModule m_frontLeft = new SwerveModule(10, 20, 0, 1541, "Front Left", false);
+  private final SwerveModule m_backLeft = new SwerveModule(11, 21, 1, 2402, "Back Left", false);
+  private final SwerveModule m_backRight = new SwerveModule(12, 22, 2, 1535, "Back Right", false);
+  private final SwerveModule m_frontRight = new SwerveModule(13, 23, 3, 1117, "Front Right", false);
+  */
   private final SwerveModule m_frontLeft = new SwerveModule(10, 20, 0, 1436, "Front Left", false);
   private final SwerveModule m_backLeft = new SwerveModule(11, 21, 1, 2383, "Back Left", false);
   private final SwerveModule m_backRight = new SwerveModule(12, 22, 2, 1435, "Back Right", false);
@@ -57,6 +63,15 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
   double goalY = 27 * 6;
   double kP = 0.015;
   double scaleSpeed = 1;
+  double direction = 1;
+
+  int[] teleopOffsets = new int[] {
+    1541, 2403, 1535, 1117
+  };
+
+  int[] autonOffsets = new int[] {
+    1436, 2383, 1435, 1015
+  };
 
   private final SwerveModulePosition[] defaultPos = new SwerveModulePosition[] {
       new SwerveModulePosition(0, new Rotation2d(0)),
@@ -85,6 +100,11 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
     driveAligned = aligned;
   }
 
+  public void setDriveDirection(boolean direction) {
+    if (direction) this.direction = 1;
+    else this.direction = -1;
+  }
+
   public void toggleDriveAligned() {
     driveAligned = !driveAligned;
   }
@@ -92,6 +112,20 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
   public void setSlowDriveMode(boolean slow) {
     if (slow) scaleSpeed = 0.4;
     else scaleSpeed = 1;
+  }
+
+  public void setAutoOffsets() {
+    m_frontLeft.setEncoderOffset(autonOffsets[0]);
+    m_backLeft.setEncoderOffset(autonOffsets[1]);
+    m_backRight.setEncoderOffset(autonOffsets[2]);
+    m_frontRight.setEncoderOffset(autonOffsets[3]);
+  }
+
+  public void setTeleopOffsets() {
+    m_frontLeft.setEncoderOffset(teleopOffsets[0]);
+    m_backLeft.setEncoderOffset(teleopOffsets[1]);
+    m_backRight.setEncoderOffset(teleopOffsets[2]);
+    m_frontRight.setEncoderOffset(teleopOffsets[3]);
   }
 
   /**
@@ -105,8 +139,13 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
    */
   @SuppressWarnings("ParameterName")
   public void drive(double xSpeed, double ySpeed, double rot) {
-    if (RobotContainer.driver.leftTrigger().getAsBoolean()) scaleSpeed = 0.4;
-    else scaleSpeed = 1;
+    xSpeed *= direction;
+    ySpeed *= direction;
+    if (RobotContainer.driver.leftTrigger().getAsBoolean()) {
+      scaleSpeed = 0.3;
+    } else {
+      if (scaleSpeed < 1) scaleSpeed = Math.min(1, scaleSpeed + 0.05);
+    }
     xSpeed *= scaleSpeed;
     ySpeed *= scaleSpeed;
     rot *= scaleSpeed;
@@ -233,6 +272,7 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    /*
     SmartDashboard.putNumber("Back Right", m_backRight.getAbsoluteTurnPosition());
     SmartDashboard.putNumber("Back Left", m_backLeft.getAbsoluteTurnPosition());
     SmartDashboard.putNumber("Front Right", m_frontRight.getAbsoluteTurnPosition());
@@ -241,6 +281,7 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
     SmartDashboard.putNumber("X", pose.getX());
     SmartDashboard.putNumber("Y", pose.getY());
     SmartDashboard.putNumber("Rotation", pose.getRotation().getDegrees());
+    */
 
     // updateOdometry();
     // System.out.println(fieldRelative);

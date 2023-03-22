@@ -57,6 +57,7 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
       velocityX, velocityY, velocityZ;
   StringLogEntry messages;
   BooleanLogEntry threadRunningLog;
+  double[] finalPoint;
 
   boolean photoEyeShutoff = false;
   public DriveSwerveProfile(Profile profile, double power, boolean photoEyeShutoff) {
@@ -80,7 +81,8 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
     length = 0;
     for (int i = 0; i < numCurves; i++)
       length += curves[i].length();
-    System.out.println("Total Length" + length);
+    // System.out.println("Total Length" + length);
+    finalPoint = waypoints[numCurves];
 
     // set up some robot data
     maxSpeed = RobotData.maxSpeed * power; // maximum speed we're allowed to drive, we want to cap it
@@ -215,14 +217,20 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
     double xSpeed = speedPoint2d.x;
     double ySpeed = speedPoint2d.y;
 
-    // Prepare to update new parameter on curve
-    double deltaS = currentVelocity * deltaT / currentTangent.length();
-    double newS = currentS + deltaS;
-    if (photoEyeShutoff &&  currentCurveNumber == numCurves - 1 && RobotContainer.intakeSubsystem.getPhotoEye()) {
+    double deltaX = finalPoint[0] - currentPose.getX();
+    double deltaY = finalPoint[1] - currentPose.getY();
+    double distanceToTarget = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    
+    if (photoEyeShutoff &&  distanceToTarget < 10 && RobotContainer.intakeSubsystem.getPhotoEye()) {
       finished = true;
       stopNotifier();
       return;
     }
+    
+    // Prepare to update new parameter on curve
+    double deltaS = currentVelocity * deltaT / currentTangent.length();
+    double newS = currentS + deltaS;
+    
     // System.out.println(currentCurveNumber);
     if (newS > 1) { // we are going to the next curve
       // this is a little hacky, math could be improved, but probably not a big deal

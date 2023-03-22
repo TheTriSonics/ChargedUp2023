@@ -33,13 +33,15 @@ public class OperatorStateMachine extends SubsystemBase {
   int state = REST;
   int[] nextState = new int[7];
   boolean disabled = false;
+  boolean teleop = false;
 
   // hLiftDelay, vLiftDelay, wheelDelay, clampDelay, flipperDelay, intakeDelay;
-  Delays gamePiecePrepDelay = new Delays(0.5, 0, 0, 0.3, 0.3, 0);
-  Delays engageGamePieceDelay = new Delays(0, 0.5, 0.5, 0, 0, 0.2);
+  Delays gamePiecePrepDelay = new Delays(0.5, 0, 0, 0.6, 0.6
+  , 0);
+  Delays engageGamePieceDelay = new Delays(0, 0.5, 0.5, 0, 0, 0.5);
   Delays preparePlacementDelay = new Delays(0.75, 0, 0, 0, 0, 0);
   Delays placeGamePieceDelay = new Delays(0, 0, 0, 0, 0, 0);
-  Delays restDelay = new Delays(0, 0.5, 0, 0, 0, 0.5);
+  Delays restDelay = new Delays(0, 0.5, 0, 0.5, 0.5, 0.5);
   Delays[] stateDelays = new Delays[7];
   /** Creates a new OperatorStateMachine. */
   public OperatorStateMachine() {
@@ -75,6 +77,11 @@ public class OperatorStateMachine extends SubsystemBase {
 
   public void setScoringLevel(int scoringLevel) {
     level = scoringLevel;
+    disabled = false;
+  }
+
+  public void setTeleop(boolean teleop) {
+    this.teleop = teleop;
   }
 
   public void setGamePiece(boolean cube) {
@@ -134,15 +141,18 @@ public class OperatorStateMachine extends SubsystemBase {
         if (time >= delays.clampDelay) RobotContainer.pneumatics.setValve(Pneumatics.CLAMP, true);
         if (time >= delays.flipperDelay) RobotContainer.pneumatics.setValve(Pneumatics.FLIPPER, true);
         if (time >= delays.intakeDelay) RobotContainer.pneumatics.setValve(Pneumatics.INTAKE, true);
+        if (time > 1 && teleop && RobotContainer.intakeSubsystem.getPhotoEye()) advanceState();
         break;
       }
       case GAMEPIECEPREPSHELF: {
         if (time >= delays.hLiftDelay) RobotContainer.horizontalLiftSubsystem.setSetPoint(HorizontalLiftSubsystem.LOW);
         if (time >= delays.vLiftDelay) RobotContainer.verticalLiftSubsystem.setSetPoint(VerticalLiftSubsystem.SHELF);
+        //if (time >= delays.vLiftDelay) RobotContainer.verticalLiftSubsystem.setSetPoint();
         if (time >= delays.wheelDelay) RobotContainer.intakeSubsystem.setPower(1);
         if (time >= delays.clampDelay) RobotContainer.pneumatics.setValve(Pneumatics.CLAMP, true);
         if (time >= delays.flipperDelay) RobotContainer.pneumatics.setValve(Pneumatics.FLIPPER, true);
         if (time >= delays.intakeDelay) RobotContainer.pneumatics.setValve(Pneumatics.INTAKE, true);
+        if (time > 1 && teleop && RobotContainer.intakeSubsystem.getPhotoEye()) advanceState();
         break;
       }
       case GAMEPIECEPREPSLIDE: {

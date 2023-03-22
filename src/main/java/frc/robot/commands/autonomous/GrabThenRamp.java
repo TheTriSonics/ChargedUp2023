@@ -16,9 +16,10 @@ import frc.robot.subsystems.OperatorStateMachine;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class GrabThenRamp extends InitializedCommandGroup {
   /** Creates a new GrabThenRamp. */
-  double[] redTarget = new double[] {110, -60, 0};
-  double[] blueTarget = new double[] {-110, -45, 180};
+  double[] redTarget = new double[] {100, -60, -90};
+  double[] blueTarget = new double[] {-100, -45, 90};
   double[] target;
+  double targetHeading;
   public GrabThenRamp() {
 
   }
@@ -26,27 +27,41 @@ public class GrabThenRamp extends InitializedCommandGroup {
   public void initialization() {
     String matchData = RobotContainer.getMatchData();
     double[] odometry = AutonomousProfiles.initialOdometries.get(matchData);
-    if (matchData.startsWith("R", 0)) target = redTarget;
-    else target = blueTarget;
-    SmartDashboard.putNumber("target X", target[0]);
+    boolean red = matchData.startsWith("R", 0);
+    
+
+    boolean left = matchData.equals("RL") || matchData.equals("BL");
+    if (left) {
+      redTarget[0] = 80;
+      blueTarget[0] = -80;
+    }
+
+    if (red) {
+      target = redTarget;
+      targetHeading = -90;
+    }
+    else {
+      target = blueTarget;
+      targetHeading = 90;
+    }
+    
     addCommands(
       Commands.parallel(
         new AutoPlaceGamePiece(false, OperatorStateMachine.HIGH), 
         new SetOdometry(odometry[0], odometry[1], odometry[2])
-        //new SetUseAprilTags(matchData == "RL" || matchData == "BR")
       ),
       new ParallelCommandGroup(
-        new DriveSwerveProfile(AutonomousProfiles.driveToFirstGamePiece.get(matchData), 0.3),// 0.6), 
+        new DriveSwerveProfile(AutonomousProfiles.driveToFirstGamePiece.get(matchData), 0.3, true),// 0.6), 
         Commands.parallel(
           Commands.sequence(new Wait(1500), new AdvanceState())),
-          new SetGamePiece(false),
+          new SetGamePiece(true),
           new SetScoringLevel(OperatorStateMachine.HIGH)
         ),
         new AdvanceState(),
         //new SetUseAprilTags(true),
-        new Wait(200),
+        new Wait(400),
         new DriveToPose(target[0], target[1], target[2], 0.50),
-        new DriveOnRamp(false)
+        new DriveOnRamp2()
     );
   }
 }

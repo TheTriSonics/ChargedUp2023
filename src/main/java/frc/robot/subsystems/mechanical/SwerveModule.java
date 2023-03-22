@@ -135,6 +135,10 @@ public AnalogInput getTurnEncoder(){
     return m_turnEncoder.getValue() - m_encoderOffset;
   }
 
+  public void setEncoderOffset(int offset) {
+    m_encoderOffset = offset;
+  }
+
   public double getAbsoluteTurnPosition() {
     return m_turnEncoder.getValue();
   }

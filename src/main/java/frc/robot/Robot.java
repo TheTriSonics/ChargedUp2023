@@ -25,6 +25,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  boolean didAuto = false;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -83,6 +84,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    didAuto = true;
+    m_robotContainer.operatorStateMachine.setTeleop(false);
+    m_robotContainer.swerveDrive.setAutoOffsets();
     
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     // schedule the autonomous command (example)
@@ -103,9 +107,17 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    m_robotContainer.swerveDrive.setTeleopOffsets();
+    m_robotContainer.operatorStateMachine.setTeleop(true);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    if (didAuto && RobotContainer.getMatchData().startsWith("B")) {
+      RobotContainer.swerveDrive.setDriveDirection(false);
+    }
+    RobotContainer.verticalLiftSubsystem.holdSetPoint();
+    didAuto = false;
+
   }
 
   /** This function is called periodically during operator control. */

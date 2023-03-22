@@ -35,12 +35,12 @@ public class PickOneGamePiece extends InitializedCommandGroup {
       Commands.parallel(
         new AutoPlaceGamePiece(false, OperatorStateMachine.HIGH), 
         new SetOdometry(odometry[0], odometry[1], odometry[2]),
-        new SetUseAprilTags(matchData == "RL" || matchData == "BR")
+        new SetUseAprilTags(false)
       ),
       new ParallelCommandGroup(
         new DriveSwerveProfile(AutonomousProfiles.driveToFirstGamePiece.get(matchData), 0.3, true),// 0.6), 
         Commands.parallel(
-          Commands.sequence(new Wait(2500), new AdvanceState())),
+          Commands.sequence(new Wait(1800), new AdvanceState())),
           new SetGamePiece(true),
           new SetScoringLevel(OperatorStateMachine.HIGH)
         ),

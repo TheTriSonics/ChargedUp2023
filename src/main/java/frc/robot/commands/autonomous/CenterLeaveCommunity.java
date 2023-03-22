@@ -27,26 +27,27 @@ public class CenterLeaveCommunity extends InitializedCommandGroup {
     double targetHeading;
     double rampTarget;
     if (matchData.startsWith("R")) {
-      odometry = new double[] {250, -60, 180};
+      odometry = new double[] {250, -80, 180};
       target = new double[] {70, -60, 180};
-      rampTarget = 180;
-      targetHeading = 0;
+      rampTarget = 182;
+      targetHeading = -90;
     } else {
-      odometry = new double[] {-250, -60, 0};
-      target = new double[] {-70, -60, 0};
-      rampTarget = -180;
-      targetHeading = 180;
+      odometry = new double[] {-250, -80, 0};
+      target = new double[] {-70, -80, 0};
+      rampTarget = 182;
+      targetHeading = 90;
     }
 
     addCommands(
       Commands.parallel(
-        //new AutoPlaceGamePiece(true, OperatorStateMachine.HIGH), 
+        new AutoPlaceGamePiece(false, OperatorStateMachine.HIGH), 
         new SetOdometry(odometry[0], odometry[1], odometry[2])
        // new SetUseAprilTags(true)
       ),
       new DriveToPose(target[0], target[1], target[2], 0.3),
       new RotateToHeading(targetHeading),
-      new DriveOnRamp(true, rampTarget)
+      //new DriveOnRamp(true, rampTarget)
+      new DriveOnRamp2()
     );
     
   }

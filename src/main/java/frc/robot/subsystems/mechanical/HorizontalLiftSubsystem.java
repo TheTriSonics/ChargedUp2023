@@ -37,14 +37,16 @@ public class HorizontalLiftSubsystem extends SubsystemBase {
   double[] setPoints = cubeSetPoints;
 
   TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(50, 200);
+  //TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(75, 120);
   ProfiledPIDController controller = new ProfiledPIDController(0.3, 0, 0.00, constraints, 0.02);
+  //ProfiledPIDController controller = new ProfiledPIDController(0.15, 0, 0.00, constraints, 0.02);
   
   private final TalonFX m_slideMotor = new TalonFX(RobotConstants.SLIDE_MOTOR);
   private final Encoder encoder = new Encoder(0, 1);
 
   double setPoint = 0;
   final double INCHESPERPULSE = 43.375/251813; // for the Talon
-  final double ENCODERINCHESPERPULSE = INCHESPERPULSE * 106661 / 5352.75;
+  final double ENCODERINCHESPERPULSE = INCHESPERPULSE;// * 106661 / 5352.75;
 
   /** Creates a new HorizontalLiftSubsystem. */
   public HorizontalLiftSubsystem() {
@@ -54,15 +56,9 @@ public class HorizontalLiftSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("H Slide Position", getPosition());
-    SmartDashboard.putNumber("H Slide Encoder", encoder.getDistance());
-    SmartDashboard.putNumber("H Slide Falcon", m_slideMotor.getSelectedSensorPosition());
-    /* 
     
-    if (RobotContainer.operator.getHID().getBButton()) controller.setGoal(30);
-    if (RobotContainer.operator.getHID().getXButton()) controller.setGoal(10);
-    if (RobotContainer.operator.getHID().getYButton()) controller.setGoal(0);
-    */
+    SmartDashboard.putNumber("H Slide Position", getPosition());
+    
     // This method will be called once per scheduler run
     double power = -0.75*RobotContainer.operator.getRightY();
     double position = getPosition();
@@ -83,8 +79,8 @@ public class HorizontalLiftSubsystem extends SubsystemBase {
     if (power > 0 && getPosition() >  MAX_HORIZONTAL_IN_INCHES) {
       power = 0;
     }
-    else if (power < 0 && getPosition() < 0.1) {
-      power = 0;
+    else if (power < 0 && getPosition() < 3) { // JJB: Altered from 0.1 to 0.5 during STandish at 12:37pm.
+      power = Math.max(power, -0.05*getPosition());
     }
     //SmartDashboard.putNumber("Orig Power", origPower);
     //SmartDashboard.putNumber("Final Power", power);
@@ -106,8 +102,8 @@ public class HorizontalLiftSubsystem extends SubsystemBase {
   }
 
   public double getPosition() {
-    //return m_slideMotor.getSelectedSensorPosition() * INCHESPERPULSE;
-    return encoder.getDistance() * ENCODERINCHESPERPULSE;
+    return m_slideMotor.getSelectedSensorPosition() * INCHESPERPULSE * 24/18.0;
+    //return encoder.getDistance() * ENCODERINCHESPERPULSE;
   }
 
   public void resetPosition() {
@@ -115,6 +111,6 @@ public class HorizontalLiftSubsystem extends SubsystemBase {
   }
 
   public boolean inPosition() {
-    return Math.abs(getPosition() - setPoint) < 3;
+    return Math.abs(getPosition() - setPoint) < 1.5;
   }
 }

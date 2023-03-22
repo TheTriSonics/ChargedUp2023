@@ -4,10 +4,14 @@
 
 package frc.robot.subsystems.controls;
 
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.datalog.BooleanLogEntry;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
@@ -22,6 +26,7 @@ public class PoseEstimate extends SubsystemBase {
   DoubleLogEntry llPoseX, llPoseY, llPoseHeading;
   DoubleLogEntry poseX, poseY, poseHeading;
   BooleanLogEntry usedLimeLight;
+  Matrix<N3,N1> stds = VecBuilder.fill(2, 2, Units.degreesToRadians(2));
 
   /** Creates a new PoseEstimate. */
   public PoseEstimate() {
@@ -71,6 +76,7 @@ public class PoseEstimate extends SubsystemBase {
     while (heading < -180) heading += 360;
     Pose2d llPose;
     boolean backCamera = false;
+    /*
     if (RobotContainer.isAllianceRed()) {
       if (Math.abs(heading) < 90){
         llPose = RobotContainer.backLimelight.getPose();
@@ -86,6 +92,8 @@ public class PoseEstimate extends SubsystemBase {
         backCamera = true;
       }  
     }
+    */
+    llPose = RobotContainer.backLimelight.getPose();
     
     // SmartDashboard.putBoolean("backCamera", backCamera);
     double timeStamp = RobotContainer.limelight.getTimeStamp();
@@ -105,7 +113,8 @@ public class PoseEstimate extends SubsystemBase {
         if (distance < 40) { // && llPose.getX() > 160) {
           goodTag = true;
           llPose = new Pose2d(llPose.getX(), llPose.getY(), pose.getRotation());
-          if (useAprilTags) poseEstimator.addVisionMeasurement(llPose, RobotContainer.limelight.getLastTimeStamp());
+          if (useAprilTags) poseEstimator.addVisionMeasurement(llPose, RobotContainer.limelight.getLastTimeStamp(), stds);
+          //System.out.println("updating");
         }
       }
     }
