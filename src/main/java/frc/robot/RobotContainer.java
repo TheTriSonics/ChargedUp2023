@@ -34,9 +34,10 @@ import frc.robot.commands.autonomous.ScoreTwo;
 import frc.robot.commands.autonomous.ScoreTwoGrabThird;
 import frc.robot.commands.autonomous.ScoreTwoLowThenRamp;
 import frc.robot.commands.autonomous.ScoreTwoThenLoopyToRamp;
-import frc.robot.commands.autonomous.ScoreTwo;
+import frc.robot.commands.autonomous.ScoreTwoWithAbort;
 import frc.robot.commands.autonomous.StrafeToVisionTarget;
 import frc.robot.subsystems.OperatorStateMachine;
+import frc.robot.subsystems.AutonStateMachine;
 import frc.robot.subsystems.controls.PoseEstimate;
 import frc.robot.subsystems.mechanical.HorizontalLiftSubsystem;
 import frc.robot.subsystems.mechanical.*;
@@ -68,13 +69,14 @@ public class RobotContainer {
   public static Pneumatics pneumatics = new Pneumatics();
   public static IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   public static OperatorStateMachine operatorStateMachine = new OperatorStateMachine();
+  public static AutonStateMachine autonStateMachine = new AutonStateMachine();
  
   public static CommandXboxController driver = new CommandXboxController(0);
   public static CommandXboxController operator = new CommandXboxController(1);
   public static DataLog dataLog;
   static String alliance = "R";
   static String position = "R";
-  SendableChooser<InitializedCommandGroup> chooser = new SendableChooser<>();
+  SendableChooser<Command> chooser = new SendableChooser<>();
   SendableChooser<String> allianceChooser = new SendableChooser<>();
   SendableChooser<String> positionChooser = new SendableChooser<>();
 
@@ -90,6 +92,7 @@ public class RobotContainer {
 
     //chooser.addOption("Just Loopy Path", new LoopyPathToChargeStation());
     chooser.setDefaultOption("Score Two", new ScoreTwo());
+    chooser.addOption("Score Two with Abort", new ScoreTwoWithAbort());
     chooser.addOption("Score, Pick one, Ramp", new GrabThenRamp());
     //chooser.addOption("Score Two Then Center Ramp", new ScoreTwoLowThenRamp());
     //chooser.addOption("Score Second To Third Gamepiece", new ScoreTwoGrabThird());
@@ -167,10 +170,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    InitializedCommandGroup command = chooser.getSelected();
-    command.initialization();
+    Command command = chooser.getSelected();
+    if (command instanceof InitializedCommandGroup) {
+      ((InitializedCommandGroup)command).initialization();
+    }
     return command;
-    //return new DriveOnRamp2();
   }
 
 }
