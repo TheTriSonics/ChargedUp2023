@@ -31,7 +31,7 @@ public class HorizontalLiftSubsystem extends SubsystemBase {
     5, 20, 36, 0, 0, 0, 0 // 36
   };
   double[] coneSetPoints = new double[] {
-    5, 21.5, 38, 0, 0, 0, 0 // was 40.2
+    5, 23.5, 38, 0, 0, 0, 0 // was 40.2
   };
 
   double[] setPoints = cubeSetPoints;
@@ -42,7 +42,7 @@ public class HorizontalLiftSubsystem extends SubsystemBase {
   //ProfiledPIDController controller = new ProfiledPIDController(0.15, 0, 0.00, constraints, 0.02);
   
   private final TalonFX m_slideMotor = new TalonFX(RobotConstants.SLIDE_MOTOR);
-  private final Encoder encoder = new Encoder(0, 1);
+ //private final Encoder encoder = new Encoder(0, 1);
 
   double setPoint = 0;
   final double INCHESPERPULSE = 43.375/251813; // for the Talon
@@ -50,7 +50,7 @@ public class HorizontalLiftSubsystem extends SubsystemBase {
 
   /** Creates a new HorizontalLiftSubsystem. */
   public HorizontalLiftSubsystem() {
-    encoder.setReverseDirection(true);
+    //encoder.setReverseDirection(true);
     
   }
 

@@ -44,6 +44,7 @@ public class PickOneGamePiece extends InitializedCommandGroup {
           new SetGamePiece(true),
           new SetScoringLevel(OperatorStateMachine.HIGH)
         ),
+        new WaitForPhotoEye(),
         new AdvanceState(),
         new Wait(500),
         new SetGamePiece(true),

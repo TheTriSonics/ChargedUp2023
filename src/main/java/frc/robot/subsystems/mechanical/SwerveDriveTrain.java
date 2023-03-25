@@ -142,9 +142,9 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
     xSpeed *= direction;
     ySpeed *= direction;
     if (RobotContainer.driver.leftTrigger().getAsBoolean()) {
-      scaleSpeed = 0.3;
+      scaleSpeed = Math.max(0.3, scaleSpeed - 0.05);
     } else {
-      if (scaleSpeed < 1) scaleSpeed = Math.min(1, scaleSpeed + 0.05);
+      scaleSpeed = Math.min(1, scaleSpeed + 0.05);
     }
     xSpeed *= scaleSpeed;
     ySpeed *= scaleSpeed;
@@ -272,11 +272,12 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    
+    //SmartDashboard.putNumber("Back Right", m_backRight.getAbsoluteTurnPosition());
+    //SmartDashboard.putNumber("Back Left", m_backLeft.getAbsoluteTurnPosition());
+    //SmartDashboard.putNumber("Front Right", m_frontRight.getAbsoluteTurnPosition());
+    //SmartDashboard.putNumber("Front Left", m_frontLeft.getAbsoluteTurnPosition());
     /*
-    SmartDashboard.putNumber("Back Right", m_backRight.getAbsoluteTurnPosition());
-    SmartDashboard.putNumber("Back Left", m_backLeft.getAbsoluteTurnPosition());
-    SmartDashboard.putNumber("Front Right", m_frontRight.getAbsoluteTurnPosition());
-    SmartDashboard.putNumber("Front Left", m_frontLeft.getAbsoluteTurnPosition());
     Pose2d pose = getOdometry().getPoseMeters();
     SmartDashboard.putNumber("X", pose.getX());
     SmartDashboard.putNumber("Y", pose.getY());

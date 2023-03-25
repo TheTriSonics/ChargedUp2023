@@ -5,11 +5,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.OperatorStateMachine;
 import frc.robot.subsystems.mechanical.IntakeSubsystem;
 
 /**
@@ -26,6 +28,8 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
   boolean didAuto = false;
+  
+  private DigitalInput limitSwitch = new DigitalInput(0);
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -67,6 +71,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     m_robotContainer.update();
     //SmartDashboard.putBoolean("Photoeye", m_robotContainer.intakeSubsystem.getPhotoeye());
+    SmartDashboard.putBoolean("Limit Switch", limitSwitch.get()); 
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -107,11 +112,12 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    m_robotContainer.swerveDrive.setTeleopOffsets();
-    m_robotContainer.operatorStateMachine.setTeleop(true);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    m_robotContainer.swerveDrive.setTeleopOffsets();
+    m_robotContainer.operatorStateMachine.setTeleop(true);
+    m_robotContainer.operatorStateMachine.goHome();
     if (didAuto && RobotContainer.getMatchData().startsWith("B")) {
       RobotContainer.swerveDrive.setDriveDirection(false);
     }

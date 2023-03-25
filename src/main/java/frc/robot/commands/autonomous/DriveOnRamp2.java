@@ -5,6 +5,7 @@
 package frc.robot.commands.autonomous;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -22,6 +23,7 @@ public class DriveOnRamp2 extends CommandBase {
   boolean ascending = false;
   double targetHeading;
   boolean blue;
+  boolean back = false;
 
   public DriveOnRamp2() {
     addRequirements(RobotContainer.swerveDrive);
@@ -39,6 +41,7 @@ public class DriveOnRamp2 extends CommandBase {
     ascending = false;
     timer = null;
     blue = RobotContainer.getMatchData().startsWith("B", 0);
+    //RobotContainer.swerveDrive.setOdometry(new Pose2d(100, -60, new Rotation2d().fromDegrees(-90)));
   }
 
   public double normalizeAngle(double x) {
@@ -59,12 +62,16 @@ public class DriveOnRamp2 extends CommandBase {
         timer = new Timer();
         timer.start();
       } else {
-        if (timer.hasElapsed(1.5)) power = 0.12;
+        if (timer.hasElapsed(1.25)) power = 0.08;
       }
       if (Math.abs(roll) < 10) {
         power = 0;
+        back = true;
+        timer.reset();
         finished = true;
       }
+      if (back && timer.hasElapsed(0.04)) finished = true;
+      if (back) power = -0.05;
 
     }
     if (blue) power *= -1;
