@@ -13,8 +13,8 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.mechanical.SwerveDriveTrain;
 
 public class SwerveDriveCommand extends CommandBase {
-  private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(1.5);
-  private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(1.5);
+  private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(1.5); // 1.5
+  private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(1.5); // 1.5
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
   CommandXboxController controller;
 

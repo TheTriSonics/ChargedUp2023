@@ -31,7 +31,7 @@ public class HorizontalLiftSubsystem extends SubsystemBase {
     5, 20, 36, 0, 0, 0, 0 // 36
   };
   double[] coneSetPoints = new double[] {
-    5, 23.5, 38, 0, 0, 0, 0 // was 40.2
+    5, 23.5, 39, 0, 0, 0, 0 // was 40.2
   };
 
   double[] setPoints = cubeSetPoints;

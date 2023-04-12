@@ -117,11 +117,16 @@ public class Robot extends TimedRobot {
     }
     m_robotContainer.swerveDrive.setTeleopOffsets();
     m_robotContainer.operatorStateMachine.setTeleop(true);
-    m_robotContainer.operatorStateMachine.goHome();
+    if (m_robotContainer.intakeSubsystem.getPhotoEye()) {
+       m_robotContainer.verticalLiftSubsystem.resetController();
+       m_robotContainer.operatorStateMachine.setState(OperatorStateMachine.ENGAGEGAMEPIECE);
+    }
+    else  RobotContainer.verticalLiftSubsystem.holdSetPoint();
+   // m_robotContainer.operatorStateMachine.goHome();
     if (didAuto && RobotContainer.getMatchData().startsWith("B")) {
       RobotContainer.swerveDrive.setDriveDirection(false);
     }
-    RobotContainer.verticalLiftSubsystem.holdSetPoint();
+   
     didAuto = false;
 
   }

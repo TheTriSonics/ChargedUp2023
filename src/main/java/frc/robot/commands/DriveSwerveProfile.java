@@ -221,7 +221,7 @@ public class DriveSwerveProfile extends CommandBase implements Runnable {
     double deltaY = finalPoint[1] - currentPose.getY();
     double distanceToTarget = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
     
-    if (photoEyeShutoff &&  distanceToTarget < 10 && RobotContainer.intakeSubsystem.getPhotoEye()) {
+    if (photoEyeShutoff &&  distanceToTarget < 20 && RobotContainer.intakeSubsystem.getPhotoEye()) {
       finished = true;
       stopNotifier();
       return;

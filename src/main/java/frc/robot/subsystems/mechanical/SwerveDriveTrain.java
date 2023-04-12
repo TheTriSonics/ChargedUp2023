@@ -66,11 +66,15 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
   double direction = 1;
 
   int[] teleopOffsets = new int[] {
-    1541, 2403, 1535, 1117
+    1536, 2385, 1545, 1106
   };
 
   int[] autonOffsets = new int[] {
     1436, 2383, 1435, 1015
+  };
+
+  int[] encoderOffsets = new int[] {
+    1550, 2401, 1554, 1117
   };
 
   private final SwerveModulePosition[] defaultPos = new SwerveModulePosition[] {
@@ -86,6 +90,8 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
       RobotContainer.gyro.getRotation2d(), defaultPos);
 
   public SwerveDriveTrain() {
+    teleopOffsets = encoderOffsets;
+    autonOffsets = encoderOffsets;
     RobotContainer.gyro.reset();
     notifier = new Notifier(this);
     notifier.startPeriodic(0.01);
@@ -141,8 +147,8 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
   public void drive(double xSpeed, double ySpeed, double rot) {
     xSpeed *= direction;
     ySpeed *= direction;
-    if (RobotContainer.driver.leftTrigger().getAsBoolean()) {
-      scaleSpeed = Math.max(0.3, scaleSpeed - 0.05);
+    if (RobotContainer.driver.leftTrigger().getAsBoolean() || RobotContainer.verticalLiftSubsystem.getPosition() > 24) {
+      scaleSpeed = Math.max(0.4, scaleSpeed - 0.05);
     } else {
       scaleSpeed = Math.min(1, scaleSpeed + 0.05);
     }

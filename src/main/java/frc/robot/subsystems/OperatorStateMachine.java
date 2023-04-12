@@ -22,6 +22,7 @@ public class OperatorStateMachine extends SubsystemBase {
   public static final int PLACEGAMEPIECE = 4;
   public static final int GAMEPIECEPREPSHELF = 5;
   public static final int GAMEPIECEPREPSLIDE = 6;
+  public static final int ENGAGEGAMEPIECEFROMSHELF = 7;
   
   boolean cube = false;
   public static final int LOW = 0;
@@ -30,19 +31,20 @@ public class OperatorStateMachine extends SubsystemBase {
   public static final int RIGHTCONE = 4;
 
   int level = LOW;
-  int state = REST;
-  int[] nextState = new int[7];
+  private int state = REST;
+  int[] nextState = new int[8];
   boolean disabled = false;
   boolean teleop = false;
 
   // hLiftDelay, vLiftDelay, wheelDelay, clampDelay, flipperDelay, intakeDelay;
   Delays gamePiecePrepDelay = new Delays(0.5, 0, 0, 0.6, 0.6
   , 0);
-  Delays engageGamePieceDelay = new Delays(0, 0.75, 0.5, 0, 0, 0.5);
+  Delays engageGamePieceDelay = new Delays(0.5, 0.2, 0.5, 0, 0, 0.5);
   Delays preparePlacementDelay = new Delays(0.75, 0, 0, 0, 0, 0);
   Delays placeGamePieceDelay = new Delays(0, 0, 0, 0, 0, 0);
   Delays restDelay = new Delays(0, 0.5, 0, 0.5, 0.5, 0.5);
-  Delays[] stateDelays = new Delays[7];
+  Delays engageGamePieceFromShelfDelay = new Delays(0, 0.75, 0.5, 0, 0, 0.5);
+  Delays[] stateDelays = new Delays[8];
   /** Creates a new OperatorStateMachine. */
   public OperatorStateMachine() {
     nextState[REST] = GAMEPIECEPREP;
@@ -52,7 +54,7 @@ public class OperatorStateMachine extends SubsystemBase {
     nextState[PLACEGAMEPIECE] = REST;
     nextState[GAMEPIECEPREPSLIDE] = ENGAGEGAMEPIECE;
     nextState[GAMEPIECEPREPSHELF] = ENGAGEGAMEPIECE;
-
+    nextState[ENGAGEGAMEPIECEFROMSHELF] = PREPAREPLACEMENT;
     timer = new Timer();
     timer.start();
     stateDelays[REST] = restDelay;
@@ -62,7 +64,9 @@ public class OperatorStateMachine extends SubsystemBase {
     stateDelays[PLACEGAMEPIECE] = placeGamePieceDelay;
     stateDelays[GAMEPIECEPREPSHELF] = gamePiecePrepDelay;
     stateDelays[GAMEPIECEPREPSLIDE] = gamePiecePrepDelay;
+    stateDelays[ENGAGEGAMEPIECEFROMSHELF] = engageGamePieceFromShelfDelay;
   }
+
   public void advanceState() {
     timer.reset();
     state = nextState[state];
@@ -144,7 +148,7 @@ public class OperatorStateMachine extends SubsystemBase {
         if (time > 1 && teleop && RobotContainer.intakeSubsystem.getPhotoEye()) advanceState();
         break;
       }
-      case GAMEPIECEPREPSHELF: {
+      case GAMEPIECEPREPSHELF: {  // Pick up from double human player station
         if (time >= delays.hLiftDelay) RobotContainer.horizontalLiftSubsystem.setSetPoint(HorizontalLiftSubsystem.LOW);
         if (time >= delays.vLiftDelay) RobotContainer.verticalLiftSubsystem.setSetPoint(VerticalLiftSubsystem.SHELF);
         //if (time >= delays.vLiftDelay) RobotContainer.verticalLiftSubsystem.setSetPoint();
@@ -152,10 +156,13 @@ public class OperatorStateMachine extends SubsystemBase {
         if (time >= delays.clampDelay) RobotContainer.pneumatics.setValve(Pneumatics.CLAMP, true);
         if (time >= delays.flipperDelay) RobotContainer.pneumatics.setValve(Pneumatics.FLIPPER, true);
         if (time >= delays.intakeDelay) RobotContainer.pneumatics.setValve(Pneumatics.INTAKE, true);
-        if (time > 1 && teleop && RobotContainer.intakeSubsystem.getPhotoEye()) advanceState();
+        if (time > 1 && teleop && RobotContainer.intakeSubsystem.getPhotoEye()) {
+          timer.reset();
+          state = ENGAGEGAMEPIECEFROMSHELF;
+        }
         break;
       }
-      case GAMEPIECEPREPSLIDE: {
+      case GAMEPIECEPREPSLIDE: { // Pick up from slide, not used
         if (time >= delays.hLiftDelay) RobotContainer.horizontalLiftSubsystem.setSetPoint(HorizontalLiftSubsystem.SLIDE);
         if (time >= delays.vLiftDelay) RobotContainer.verticalLiftSubsystem.setSetPoint(VerticalLiftSubsystem.SLIDE);
         if (time >= delays.wheelDelay) RobotContainer.intakeSubsystem.setPower(1);
@@ -165,6 +172,7 @@ public class OperatorStateMachine extends SubsystemBase {
         if (time >= delays.intakeDelay) RobotContainer.pneumatics.setValve(Pneumatics.INTAKE, false);
         break;
       }
+      case ENGAGEGAMEPIECEFROMSHELF:
       case ENGAGEGAMEPIECE: {
         if (time >= delays.hLiftDelay) RobotContainer.horizontalLiftSubsystem.setSetPoint(HorizontalLiftSubsystem.TRAVELING);
         if (time >= delays.vLiftDelay) RobotContainer.verticalLiftSubsystem.setSetPoint(VerticalLiftSubsystem.TRAVELING);
@@ -187,6 +195,7 @@ public class OperatorStateMachine extends SubsystemBase {
         //if (time >= delays.hLiftDelay) RobotContainer.horizontalLiftSubsystem.setSetPoint();
         //if (time >= delays.vLiftDelay) RobotContainer.verticalLiftSubsystem.setSetPoint();
         if (cube && time >= delays.wheelDelay) RobotContainer.intakeSubsystem.setPower(-1);
+        if (time > 1) RobotContainer.intakeSubsystem.setPower(0);
         if (time >= delays.clampDelay) RobotContainer.pneumatics.setValve(Pneumatics.CLAMP, true);
         if (time >= delays.flipperDelay) RobotContainer.pneumatics.setValve(Pneumatics.FLIPPER, true);
         break;

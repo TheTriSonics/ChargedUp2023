@@ -25,13 +25,13 @@ public class VerticalLiftSubsystem extends SubsystemBase {
   public static final int SHELF = 5;
   public static final int SLIDE = 6;
   public static final int RIGHTCONE = 7;
-  public static final double MAX_VERTICAL_IN_INCHES = 48.00;
+  public static final double MAX_VERTICAL_IN_INCHES = 50.00; //used to be 48.00
   static final double INCHESPERPULSE = 49.25 / 107638;
   double[] cubeSetPoints = new double[] {
     12, 27, 40, 8, 0, 38, 24, 5
   };
   double[] coneSetPoints = new double[] {
-    12, 38, 49.5, 8, 0, 36.75, 21, 5
+    6, 38, 49.5, 8, 0, 36.75, 21, 5
   };
   double[] setPoints = cubeSetPoints;
   
@@ -69,6 +69,10 @@ public class VerticalLiftSubsystem extends SubsystemBase {
     controller.reset(getPosition());
     controller.setGoal(getPosition());
     RobotContainer.operatorStateMachine.setDisabled(true);
+  }
+  public void resetController() {
+    controller.reset(getPosition());
+    controller.setGoal(getPosition());
   }
 
   @Override
