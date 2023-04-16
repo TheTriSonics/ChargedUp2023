@@ -28,10 +28,10 @@ public class VerticalLiftSubsystem extends SubsystemBase {
   public static final double MAX_VERTICAL_IN_INCHES = 50.00; //used to be 48.00
   static final double INCHESPERPULSE = 49.25 / 107638;
   double[] cubeSetPoints = new double[] {
-    12, 27, 40, 8, 0, 38, 24, 5
+    12, 27, 40, 8, 0, 38, 24, 16
   };
   double[] coneSetPoints = new double[] {
-    6, 38, 49.5, 8, 0, 36.75, 21, 5
+    6, 38, 49.5, 8, 0, 36.75, 21, 12
   };
   double[] setPoints = cubeSetPoints;
   
@@ -91,8 +91,9 @@ public class VerticalLiftSubsystem extends SubsystemBase {
       RobotContainer.operatorStateMachine.setDisabled(true);
     }
     setPower(power);
-    //SmartDashboard.putNumber("V Slide Power", power);
+    SmartDashboard.putNumber("V Slide Power", power);
     SmartDashboard.putNumber("V Slide", getPosition());
+    SmartDashboard.putNumber("vSlideGoal", controller.getGoal().position);
     // This method will be called once per scheduler run
   }
 
@@ -112,7 +113,7 @@ public class VerticalLiftSubsystem extends SubsystemBase {
     else if (power < 0 && getPosition() < 0.1) {
       power = 0;
     }
-    if (getPosition() < 15 && RobotContainer.pneumatics.getFlipperOut() && power < 0) power = 0;
+    if (getPosition() < 15 && RobotContainer.pneumatics.getFlipperOut() && power < 0 && !RobotContainer.pneumatics.getIntakeOut()) power = 0;
     m_leftLiftMotor.set(TalonFXControlMode.PercentOutput, power * 0.4);
   }
 
@@ -124,6 +125,7 @@ public class VerticalLiftSubsystem extends SubsystemBase {
     if (cube) setPoints = cubeSetPoints;
     else setPoints = coneSetPoints;
     this.setPoint = setPoints[setPoint];
+    //controller.reset(getPosition());
     controller.setGoal(this.setPoint);
   }
 

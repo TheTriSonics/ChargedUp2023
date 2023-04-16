@@ -94,6 +94,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.swerveDrive.setAutoOffsets();
     
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    System.out.println("STARTING AUTON");
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -119,7 +120,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.operatorStateMachine.setTeleop(true);
     if (m_robotContainer.intakeSubsystem.getPhotoEye()) {
        m_robotContainer.verticalLiftSubsystem.resetController();
-       m_robotContainer.operatorStateMachine.setState(OperatorStateMachine.ENGAGEGAMEPIECE);
+       //m_robotContainer.operatorStateMachine.setState(OperatorStateMachine.ENGAGEGAMEPIECE);
     }
     else  RobotContainer.verticalLiftSubsystem.holdSetPoint();
    // m_robotContainer.operatorStateMachine.goHome();

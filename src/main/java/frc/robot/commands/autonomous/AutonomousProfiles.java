@@ -16,11 +16,13 @@ public class AutonomousProfiles {
     static Map<String, double[]> initialOdometries = new HashMap<String, double[]>();
     
     static Map<String, Profile> driveToFirstGamePiece = new HashMap<String, Profile>();
+    static Map<String, Profile> straightToFirstGamePiece = new HashMap<String, Profile>();
     
     static Map<String, Profile> firstGamePieceToSecondPlacement = new HashMap<String, Profile>();
     static Map<String, Profile> loopyPath = new HashMap<String, Profile>();
     static Map<String, Profile> driveToSecondGamePiece = new HashMap<String, Profile>();
     static Map<String, Profile> secondToThirdGamepiece = new HashMap<String, Profile>();
+    static Map<String, Profile> thirdPiece = new HashMap<String, Profile>();
 
     static Map<String, Profile> thirdPiecePlacement = new HashMap<String, Profile>();
 
@@ -55,6 +57,19 @@ public class AutonomousProfiles {
         initialOdometries.put("BR", new double[] {-250, -141, 0});
         initialOdometries.put("BL", new double[] {-250, 40, 0});
 
+        straightToFirstGamePiece.put("RR", 
+            new Profile(
+                new double[][] {
+                    {250.0, 40.4},
+                    {191.3, 37.7},
+                    {129.9, 35.7},
+                    {64.7, 35.7}
+            }, 
+                new double[] {
+                    0, 0, 0
+                }
+            ));
+
         // RED RIGHT
         driveToFirstGamePiece.put("RR", 
             new Profile(
@@ -65,7 +80,7 @@ public class AutonomousProfiles {
                     {64.7, 35.7}
             }, 
                 new double[] {
-                    -160, -20, 0
+                    180, -20, 0
                 }
             ));
 
@@ -102,7 +117,7 @@ public class AutonomousProfiles {
                     {-250.0, -141.4},
                     {-191.3, -138.7},
                     {-129.9, -140.7}, // -120.7
-                    {-40.2, -134.7} // -113.7
+                    {-30.2, -130.7} // -113.7
             }, 
                 new double[] {
                     0, 160, 180
@@ -164,7 +179,7 @@ public class AutonomousProfiles {
             new Profile(
                 new double[][] {
                     {-252.1, 25.4},
-                    {-150.0, 33.0},
+                    {-150.0, 38.0},
                     {-95.4, 15.4},
                     {-65.4, -25.4}   
             },
@@ -212,6 +227,30 @@ public class AutonomousProfiles {
                     180, -90, -45
                 }
             ));
+
+        thirdPiece.put("RR",
+        new Profile(
+            new double[][] {
+                {54.5, -15.4},
+                {114.5, 20.5}, // 27
+                {214.4, 25.8}, // 31.8
+                {270.6, -10}
+            },
+            new double[] {180, 180, 180}
+        )
+        );
+
+        thirdPiece.put("BL",
+        new Profile(
+            new double[][] {
+                {-54.5, -15.4},
+                {-114.5, 20.5},
+                {-214.4, 25.8},
+                {-280.6, -13}
+            },
+            new double[] {0, 0, 0}
+        )
+        );
        
 
         loopyPath.put("RR",

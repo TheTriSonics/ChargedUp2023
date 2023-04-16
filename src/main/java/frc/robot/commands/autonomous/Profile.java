@@ -8,9 +8,9 @@ package frc.robot.commands.autonomous;
 public class Profile {
     public double[][] waypoints;
     public double[] headings;
-    Profile(double[][] wp, double[] h) {
+    Profile(double[][] wp, double[] ds) {
         waypoints = wp;
-        headings = h;
+        headings = ds;
     }
 
 }

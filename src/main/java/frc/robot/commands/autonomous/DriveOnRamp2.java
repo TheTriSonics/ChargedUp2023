@@ -24,6 +24,7 @@ public class DriveOnRamp2 extends CommandBase {
   double targetHeading;
   boolean blue;
   boolean back = false;
+  double rotationSpeed = 0;
 
   public DriveOnRamp2() {
     addRequirements(RobotContainer.swerveDrive);
@@ -53,29 +54,30 @@ public class DriveOnRamp2 extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double roll = RobotContainer.gyro.getRoll() - rollOffset;
+    double roll = RobotContainer.gyro.getRollAverage() - rollOffset;
     
     double power = 0.25;
-    if (Math.abs(roll) > 12) ascending = true;
+    if (Math.abs(roll) > 14) ascending = true;
     if (ascending) {
       if (timer == null) {
         timer = new Timer();
         timer.start();
       } else {
-        if (timer.hasElapsed(1.25)) power = 0.08;
+        if (timer.hasElapsed(1.25)) power = 0.1;
       }
-      if (Math.abs(roll) < 10) {
+      if (Math.abs(roll) < 12) {
         power = 0;
         back = true;
         timer.reset();
-        finished = true;
+        ascending = false;
+        //finished = true;
+        rotationSpeed = 0.5;
       }
-      if (back && timer.hasElapsed(0.04)) finished = true;
-      if (back) power = -0.05;
-
     }
+    if (back && timer.hasElapsed(0.065)) finished = true;
+    if (back) power = -0.05;
     if (blue) power *= -1;
-    RobotContainer.swerveDrive.drive(power * RobotData.maxSpeed, 0, 0);         
+    RobotContainer.swerveDrive.drive(power * RobotData.maxSpeed, 0, rotationSpeed);         
   }
 
   // Called once the command ends or is interrupted.

@@ -135,10 +135,7 @@ public class OperatorStateMachine extends SubsystemBase {
       case GAMEPIECEPREP: {
         if (time >= delays.hLiftDelay) RobotContainer.horizontalLiftSubsystem.setSetPoint(HorizontalLiftSubsystem.LOW);
         if (time >= delays.vLiftDelay) {
-          int height;
-          if (level == RIGHTCONE) height = VerticalLiftSubsystem.RIGHTCONE;
-          else height = VerticalLiftSubsystem.REST;
-          RobotContainer.verticalLiftSubsystem.setSetPoint(height);
+          RobotContainer.verticalLiftSubsystem.setSetPoint(VerticalLiftSubsystem.REST);
         }
         
         if (time >= delays.wheelDelay) RobotContainer.intakeSubsystem.setPower(1);

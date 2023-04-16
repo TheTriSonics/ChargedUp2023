@@ -74,7 +74,7 @@ public class SwerveDriveTrain extends SubsystemBase implements Runnable {
   };
 
   int[] encoderOffsets = new int[] {
-    1550, 2401, 1554, 1117
+    3590 - 2048, 2413, 3587 - 2048, 1098 // 1550, 2401, 1554, 1117
   };
 
   private final SwerveModulePosition[] defaultPos = new SwerveModulePosition[] {

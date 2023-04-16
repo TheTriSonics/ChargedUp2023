@@ -19,7 +19,7 @@ public class DriveToPose extends CommandBase {
   boolean finished = false;
   double maxPower;
   double driveFactor = 0;
-  double rotFactor = 0;
+  double rotFactor = 1;
   double rampDistance = 30;
   Timer timer;
   public DriveToPose(double x, double y, double angle, double maxPower) {
@@ -61,7 +61,7 @@ public class DriveToPose extends CommandBase {
     double drivePower = maxPower * driveFactor * finalRamp;
     double ySpeed = deltay / distance * drivePower * SwerveDriveTrain.kMaxSpeed;
     double xSpeed = deltax / distance * drivePower * SwerveDriveTrain.kMaxSpeed;
-    double rotationSpeed = deltaAngle / 180 * SwerveDriveTrain.kMaxAngularSpeed * rotFactor;
+    double rotationSpeed = 1.5*deltaAngle / 180 * SwerveDriveTrain.kMaxAngularSpeed * rotFactor;
 
     // set drive power
     //System.out.println(xSpeed + " " + ySpeed + " " + rotationSpeed);

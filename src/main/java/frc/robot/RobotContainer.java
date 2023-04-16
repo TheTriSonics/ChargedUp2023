@@ -35,7 +35,7 @@ import frc.robot.commands.autonomous.ScoreTwoCones;
 import frc.robot.commands.autonomous.ScoreTwoGrabThird;
 import frc.robot.commands.autonomous.ScoreTwoLowThenRamp;
 import frc.robot.commands.autonomous.ScoreTwoThenLoopyToRamp;
-import frc.robot.commands.autonomous.ScoreTwo;
+import frc.robot.commands.autonomous.*;
 import frc.robot.commands.autonomous.StrafeToVisionTarget;
 import frc.robot.subsystems.OperatorStateMachine;
 import frc.robot.subsystems.controls.PoseEstimate;
@@ -90,6 +90,7 @@ public class RobotContainer {
     new AutonomousProfiles();
 
     //chooser.addOption("Just Loopy Path", new LoopyPathToChargeStation());
+    chooser.addOption("Three Piece", new ThreePiece());
     chooser.setDefaultOption("Score Two Cones", new ScoreTwoCones());
     chooser.addOption("Score Two", new ScoreTwo());
     chooser.addOption("Score, Pick one, Ramp", new GrabThenRamp());
@@ -160,8 +161,8 @@ public class RobotContainer {
     operator.y().onTrue(new SetScoringLevel(OperatorStateMachine.HIGH));  
     operator.x().onTrue(new SetScoringLevel(OperatorStateMachine.RIGHTCONE));
     operator.back().onTrue(new SetOperatorState(OperatorStateMachine.GAMEPIECEPREPSHELF));
-    operator.start().onTrue(new SetOperatorState(OperatorStateMachine.GAMEPIECEPREPSLIDE));
-    operator.leftStick().onTrue(new SetOperatorState(OperatorStateMachine.GAMEPIECEPREP));
+    //operator.start().onTrue(new SetOperatorState(OperatorStateMachine.GAMEPIECEPREPSLIDE));
+    operator.start().onTrue(new SetOperatorState(OperatorStateMachine.GAMEPIECEPREP));
   }
 
   /**
